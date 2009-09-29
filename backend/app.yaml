@@ -1,0 +1,17 @@
+application: adieu-backend
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /item/.*
+  script: item.py
+
+- url: /comment/.*
+  script: comment.py
+
+- url: /vote/.*
+  script: vote.py
+
+- url: .*
+  script: main.py
