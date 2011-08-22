@@ -1,0 +1,13 @@
+body {
+  background-color: #fff;
+  position: relative;
+}
+section {
+  padding-top: 60px;
+}
+#header {
+  padding: 45px 0;
+}
+#footer {
+  margin-top: 80px;
+}
