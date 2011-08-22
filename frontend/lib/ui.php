@@ -5,10 +5,26 @@ include_once LIB_PATH.'util.php';
 
 
 function render_header($selected ='Home') {
-	$ts = filemtime(CSS_PATH.'page.css');
-	$header = '<link rel="stylesheet" type="text/css" href="'.ROOT_LOCATION.'/css/page.css?ts='.$ts.'" />';
-	$ts = filemtime(JS_PATH.'base.js');
-	$header .= '<script src="'.ROOT_LOCATION.'/js/base.js?ts='.$ts.'" ></script>';
+	$header = '';
+	$header .= '<style type="text/css">';
+	$header .= '#main_body {';
+	$header .= '	padding : 10px;';
+	$header .= '	padding-top : 20px;';
+	$header .= '}';
+	$header .= 'h2 {';
+	$header .= '	font-size: 24pt;';
+	$header .= '	text-align: center;';
+	$header .= '}';
+	$header .= 'h3 {';
+	$header .= '	font-size: 14pt;';
+	$header .= '	text-align: center;';
+	$header .= '}';
+	$header .= '.event {';
+	$header .= '	font-size: 20pt;';
+	$header .= '	color: #EB7F00;';
+	$header .= '	text-align: left;';
+	$header .= '}';
+	$header .= '</style>';
 
 	$header .= '<fb:dashboard/>';
 
