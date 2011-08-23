@@ -1,9 +1,13 @@
 application: adieu-backend
-version: 1
+version: 2
 runtime: python
 api_version: 1
 
 handlers:
+##
+# Adieu application
+##
+# Services.
 - url: /item/.*
   script: item.py
 
@@ -13,5 +17,31 @@ handlers:
 - url: /vote/.*
   script: vote.py
 
+
+##
+# Midautumn application
+##
+# Services
+- url: /api/.*
+  script: midautumn/api.py
+
+# Static URIs.
+- url: /robots.txt
+  static_files: midautumn/robots.txt
+  upload: midautumn/robots.txt
+
+- url: /css
+  static_dir: midautumn/css
+
+- url: /img
+  static_dir: midautumn/img
+
+- url: /js
+  static_dir: midautumn/js
+
+# Entries
+- url: /object/.*
+  script: midautumn/object.py
+
 - url: .*
-  script: main.py
+  script: midautumn/main.py
