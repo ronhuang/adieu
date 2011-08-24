@@ -1,3 +1,29 @@
+// Midautumn
+// Copyright 2011 Ron Huang
+// See LICENSE for details.
+
+
+// Config timeago library
+jQuery.timeago.settings.strings = {
+  prefixAgo: null,
+  prefixFromNow: "從現在開始",
+  suffixAgo: "之前",
+  suffixFromNow: null,
+  seconds: "不到 1 分鐘",
+  minute: "大約 1 分鐘",
+  minutes: "%d 分鐘",
+  hour: "大約 1 小時",
+  hours: "大約 %d 小時",
+  day: "1 天",
+  days: "%d 天",
+  month: "大約 1 個月",
+  months: "%d 月",
+  year: "大約 1 年",
+  years: "%d 年",
+  numbers: []
+}
+
+
 $(document).ready(function(){
 
   // facebook init
@@ -39,19 +65,26 @@ $(document).ready(function(){
           if (data.result == 'success') {
             var container = $('#list');
             for (var i in data.objects) {
-              var o = data.objects [i];
+              var obj = data.objects[i];
+              var relative_url = '/object/' + obj.key;
+              var absolute_url = document.location.protocol + '//' + document.location.host + relative_url;
 
-              var e = $('#list div:first').clone();
-              e.find('h3').text(o.title);
-              var url = location.protocol + '//' + location.host +
-                '/object/' + o.key;
-              e.find('a:first').attr('href', url);
-              e.find('fb\\:like').attr('href', url);
-              e.find('img:first').attr('src', 'http://graph.facebook.com/' + o.owner + '/picture?type=square');
-              e.show();
+              var template = container.find('div:first').clone();
 
-              container.append(e);
+              var fb_like = '<fb:like href="' + absolute_url + '" send="false" ' +
+                'layout="button_count" width="200" show_faces="false" ' +
+                'action="like"></fb:like>';
+
+              $(fb_like).appendTo(template.find('.share'));
+
+              template.find('.title').text(obj.title);
+              template.find('.timeago').attr('href', relative_url).attr('title', obj.pubtime).timeago();
+              template.find('img:first').attr('src', 'http://graph.facebook.com/' + obj.owner + '/picture?type=square');
+
+              template.show();
+              container.append(template);
             }
+            FB.XFBML.parse(container[0]);
           }
         },
         error: function (xhr, status) {

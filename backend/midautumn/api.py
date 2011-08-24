@@ -32,7 +32,8 @@ class ObjectHandler(webapp.RequestHandler):
         key = mo.put()
 
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps({'result': 'success', 'title': title, 'owner': owner, 'key': key.id()}))
+        pubtime = mo.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ')
+        self.response.out.write(json.dumps({'result': 'success', 'title': mo.title, 'owner': mo.owner, 'pubtime': pubtime, 'key': key.id()}))
 
     def get(self, key):
         mo = MidautumnObject.get_by_id(int(key))
@@ -44,7 +45,8 @@ class ObjectHandler(webapp.RequestHandler):
             self.response.out.write(json.dumps({'result': 'not_exist', 'key': key}))
         else:
             self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps({'result': 'success', 'title': mo.title, 'owner': mo.owner, 'key': key}))
+            pubtime = mo.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ')
+            self.response.out.write(json.dumps({'result': 'success', 'title': mo.title, 'owner': mo.owner, 'pubtime': mo.pubtime, 'key': key}))
 
 
 class ObjectsHandler(webapp.RequestHandler):
@@ -53,7 +55,7 @@ class ObjectsHandler(webapp.RequestHandler):
         cursor = self.request.get('cursor', None)
 
         query = MidautumnObject.all()
-        query.order('-date')
+        query.order('-pubtime')
         if cursor:
             query.with_cursor(cursor)
 
@@ -62,7 +64,8 @@ class ObjectsHandler(webapp.RequestHandler):
         objs = []
 
         for result in results:
-            objs.append({'title': result.title, 'owner': result.owner, 'key': result.key().id()})
+            pubtime = result.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ')
+            objs.append({'title': result.title, 'owner': result.owner, 'pubtime': pubtime, 'key': result.key().id()})
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps({'result': 'success', 'objects': objs, 'cursor': query.cursor()}))
