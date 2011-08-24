@@ -30,11 +30,12 @@ $(document).ready(function(){
   // facebook init
   window.fbAsyncInit = function() {
     FB.init({
-      appId : '271148119565356',
-      status : true,
-      cookie : true,
-      xfbml : true,
-      oauth : true
+      appId: '271148119565356',
+      status: true,
+      cookie: true,
+      xfbml: true,
+      channelUrl: 'http://midautumn.ronhuang.org/channel',
+      oauth: true
     });
 
     FB.getLoginStatus(loginStatusChanged);
