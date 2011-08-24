@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
+from midautumn.models import MidautumnObject
 
 
 class HomeHandler(webapp.RequestHandler):
@@ -27,9 +28,20 @@ class ProfileHandler(webapp.RequestHandler):
 
 class ObjectHandler(webapp.RequestHandler):
     def get(self, object_id):
+        pagename = None
+        pagedata = None
+
+        mo = MidautumnObject.get_by_id(int(object_id))
+        if mo == None:
+            pagename = "object_not_found.html"
+            pagedata = {}
+        else:
+            pagename = "object.html"
+            pagedata = {'title': mo.title, 'owner': mo.owner, 'pubtime': mo.pubtime, 'key': mo.key().id()}
+
         dirname = os.path.dirname(__file__)
-        path = os.path.join(dirname, 'view', 'object.html')
-        self.response.out.write(template.render(path, {'object_id': object_id}))
+        path = os.path.join(dirname, 'view', pagename)
+        self.response.out.write(template.render(path, pagedata))
 
 
 class ChannelHandler(webapp.RequestHandler):

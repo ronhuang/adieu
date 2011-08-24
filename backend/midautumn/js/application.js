@@ -59,6 +59,11 @@ $(document).ready(function(){
   };
 
   var updateObjects = function  (response) {
+    if ($('#list').length <= 0) {
+      // Only update when there is a container named 'list'.
+      return;
+    }
+
     if (response.authResponse) {
       $.ajax({
         url: 'api/objects',
@@ -112,7 +117,7 @@ $(document).ready(function(){
     } else {
       // Not logged in
       $('a.menu span').text('');
-      $('a.menu img').attr('src', 'img/blank.jpg');
+      $('a.menu img').attr('src', '/img/blank.jpg');
       $('a.profile').attr('href', '#');
       $('input[name=owner]').val('');
     }
