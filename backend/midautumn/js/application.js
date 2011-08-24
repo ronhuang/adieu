@@ -4,21 +4,22 @@
 
 
 // Config timeago library
+// Traditional Chinese
 jQuery.timeago.settings.strings = {
   prefixAgo: null,
-  prefixFromNow: "從現在開始",
-  suffixAgo: "之前",
-  suffixFromNow: null,
+  prefixFromNow: null,
+  suffixAgo: "前",
+  suffixFromNow: "後",
   seconds: "不到 1 分鐘",
-  minute: "大約 1 分鐘",
+  minute: "約 1 分鐘",
   minutes: "%d 分鐘",
-  hour: "大約 1 小時",
-  hours: "大約 %d 小時",
+  hour: "約 1 小時",
+  hours: "約 %d 小時",
   day: "1 天",
   days: "%d 天",
-  month: "大約 1 個月",
-  months: "%d 月",
-  year: "大約 1 年",
+  month: "約 1 個月",
+  months: "%d 個月",
+  year: "約 1 年",
   years: "%d 年",
   numbers: []
 }
@@ -74,8 +75,10 @@ $(document).ready(function(){
               var fb_like = '<fb:like href="' + absolute_url + '" send="false" ' +
                 'layout="button_count" width="200" show_faces="false" ' +
                 'action="like"></fb:like>';
-
               $(fb_like).appendTo(template.find('.share'));
+
+              var fb_comment = '<fb:comments href="' + absolute_url + '" num_posts="2" width="400"></fb:comments>';
+              $(fb_comment).appendTo(template.find('.comment'));
 
               template.find('.title').text(obj.title);
               template.find('.timeago').attr('href', relative_url).attr('title', obj.pubtime).timeago();
