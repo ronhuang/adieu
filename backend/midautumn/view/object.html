@@ -14,8 +14,8 @@
 
     <meta property="og:title" content="{{ title }}">
     <meta property="og:type" content="product">
-    <meta property="og:url" content="http://midautumn.ronhuang.org/object/{{ key }}">
-    <meta property="og:image" content="http://graph.facebook.com/{{ owner }}/picture?type=square">
+    <meta property="og:url" content="{{ absolute_url }}">
+    <meta property="og:image" content="{{ owner_picture }}">
     <meta property="og:site_name" content="中秋烤肉">
     <meta property="og:description" content="推薦中秋烤肉的食材。">
 
@@ -72,11 +72,11 @@
       <section id="object">
         <div class="row">
           <div class="span2 columns offset1">
-            <img alt="推薦者圖示" src="http://graph.facebook.com/{{ owner }}/picture?type=square" width="64" height="64">
+            <img alt="推薦者圖示" src="{{ owner_picture }}" width="64" height="64">
           </div>
           <div class="span7 columns">
             <h2 class="title">{{ title }}</h2>
-            <abbr class="timeago" title="{{ pubtime }}">{{ pubtime }}</abbr>
+            <abbr class="timeago" title="{{ pubtime_iso8601 }}">{{ pubtime_local }}</abbr>
             <fb:comments num_posts="5" width="620"></fb:comments>
           </div>
         </div>

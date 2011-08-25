@@ -9,16 +9,13 @@ from google.appengine.dist import use_library
 use_library('django', '1.2')
 
 import os
+import time
 from datetime import datetime, timedelta, tzinfo
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 from midautumn.models import MidautumnObject
 from midautumn.handlers import BaseHandler
-import midautumn.utils
-
-
-TPE = midautumn.utils.TPE()
 
 
 class HomeHandler(BaseHandler):
@@ -34,20 +31,7 @@ class HomeHandler(BaseHandler):
             objects = []
             results = query.fetch(20)
             for obj in results:
-                localtime = obj.pubtime + timedelta(hours=8)
-                fmt = None
-                if localtime.hour < 12:
-                    fmt = "%Y年%m月%d號 上午%I:%M:%S"
-                else:
-                    fmt = "%Y年%m月%d號 下午%I:%M:%S"
-
-                objects.append({'owner_picture': 'http://graph.facebook.com/%s/picture?type=square' % obj.owner,
-                                'title': obj.title,
-                                'pubtime_iso8601': obj.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                                'pubtime_local': localtime.strftime(fmt),
-                                'relative_url': '/object/%s' % obj.key().id(),
-                                'absolute_url': 'http://midautumn.ronhuang.org/object/%s' % obj.key().id(),
-                                })
+                objects.append(obj.to_dict())
 
             pagename = 'home.html'
             args = {'profile_url': '/profile/%s' % self.current_user.id,
@@ -55,6 +39,7 @@ class HomeHandler(BaseHandler):
                     'profile_name': self.current_user.name,
                     'profile_id': self.current_user.id,
                     'objects': objects,
+                    'end_cursor': query.cursor()
                     }
         else:
             pagename = 'register.html'
@@ -83,7 +68,7 @@ class ObjectHandler(BaseHandler):
             pagedata = {}
         else:
             pagename = "object.html"
-            pagedata = {'title': mo.title, 'owner': mo.owner, 'pubtime': mo.pubtime, 'key': mo.key().id()}
+            pagedata = mo.to_dict()
 
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', pagename)

@@ -9,6 +9,7 @@ use_library('django', '1.2')
 
 import os
 import logging
+from datetime import datetime
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.runtime import DeadlineExceededError
@@ -23,6 +24,7 @@ class ObjectHandler(webapp.RequestHandler):
     def post(self):
         title = self.request.get('title')
         owner = self.request.get('owner')
+        timestamp = self.request.get('timestamp')
 
         # Check duplicate
         q = db.GqlQuery("SELECT * FROM MidautumnObject WHERE title = :1", title)
@@ -35,12 +37,24 @@ class ObjectHandler(webapp.RequestHandler):
         mo = MidautumnObject(title=title, owner=owner)
         mo.put()
 
+        # fetch all objects after the timestamp
+        # should include the one just posted
+        q = MidautumnObject.all()
+        q.filter('pubtime >', datetime.utcfromtimestamp(float(timestamp)))
+        q.order('-pubtime')
+
+        objects = []
+        for obj in q:
+            objects.append(obj.to_dict())
+
         # check achievements
         achievements = []
         achievements.extend(achievement.check_post(mo))
 
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps({'result': 'success', 'objects': [mo.to_dict(),], 'achievements': achievements}))
+        self.response.out.write(json.dumps({'result': 'success',
+                                            'objects': objects,
+                                            'achievements': achievements}))
 
     def get(self, key):
         mo = MidautumnObject.get_by_id(int(key))

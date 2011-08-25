@@ -25,23 +25,23 @@ COMMENT_OFFSET = 6000
 UNCOMMENT_OFFSET = 7000
 
 
-ITEM_KEY = ['玉米', '臭豆腐', '可樂', '流星下的怨', '星光戰士舞', 'Cloony 是大帥哥', ]
+ITEM_KEY = [u'玉米', u'臭豆腐', u'可樂', u'流星下的怨', u'星光戰士舞', u'Cloony 是大帥哥', ]
 ITEM_VALUE = {
-    '玉米': ('Ron 的最愛。', 'corn.png'),
-    '臭豆腐': ('臭豆腐怎麼烤啊？', 'stinky-tofu.png'),
-    '可樂': ('俊輝的最愛。', 'coke.png'),
-    '流星下的怨': ('Cloony 和 San 的經典。', 'meteor.png'),
-    '星光戰士舞': ('Leo 的代表作。', 'starlight-warrior.png'),
-    'Cloony 是大帥哥': ('...', 'cloony-toro.png'),
+    u'玉米': (u'Ron 的最愛。', u'corn.png'),
+    u'臭豆腐': (u'臭豆腐怎麼烤啊？', u'stinky-tofu.png'),
+    u'可樂': (u'俊輝的最愛。', u'coke.png'),
+    u'流星下的怨': (u'Cloony 和 San 的經典。', u'meteor.png'),
+    u'星光戰士舞': (u'Leo 的代表作。', u'starlight-warrior.png'),
+    u'Cloony 是大帥哥': (u'...', u'cloony-toro.png'),
     }
 
 ITEM_COUNT_VALUE = {
-    1: ('恭喜你推薦了你的第一個物品。', 'item-count-1.png'),
-    5: ('恭喜你推薦了你的第五個物品。', 'item-count-5.png'),
-    10: ('恭喜你推薦了你的第十個物品。', 'item-count-10.png'),
-    50: ('太誇張了！你推薦了你的第五十個物品。', 'item-count-50.png'),
-    100: ('你贏了！你推薦了你的第一百個物品。', 'item-count-100.png'),
-    500: ('真有毅力！你推薦了你的第五百個物品。', 'item-count-500.png'),
+    1: (u'恭喜你推薦了你的第一個物品。', u'item-count-1.png'),
+    5: (u'恭喜你推薦了你的第五個物品。', u'item-count-5.png'),
+    10: (u'恭喜你推薦了你的第十個物品。', u'item-count-10.png'),
+    50: (u'太誇張了！你推薦了你的第五十個物品。', u'item-count-50.png'),
+    100: (u'你贏了！你推薦了你的第一百個物品。', u'item-count-100.png'),
+    500: (u'真有毅力！你推薦了你的第五百個物品。', u'item-count-500.png'),
 }
 
 

@@ -1,5 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Midautumn
+# Copyright 2011 Ron Huang
+# See LICENSE for details.
+
+
+import time
 from google.appengine.ext import db
-import datetime
+from datetime import datetime, timedelta, tzinfo
 
 
 SIMPLE_TYPES = (int, long, float, bool, dict, basestring, list)
@@ -12,23 +20,22 @@ class MidautumnObject(db.Model):
 
     # for serialization
     def to_dict(self):
-        output = {}
+        localtime = self.pubtime + timedelta(hours=8)
+        fmt = None
+        if localtime.hour < 12:
+            fmt = "%Y年%m月%d號 上午%I:%M:%S"
+        else:
+            fmt = "%Y年%m月%d號 下午%I:%M:%S"
 
-        # key property is not in properties()
-        output['key'] = self.key().id()
+        return {'owner_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.owner,
+                'title': self.title,
+                'pubtime_iso8601': self.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'pubtime_local': localtime.strftime(fmt),
+                'timestamp': int(time.mktime(self.pubtime.timetuple())),
+                'relative_url': '/object/%s' % self.key().id(),
+                'absolute_url': 'http://midautumn.ronhuang.org/object/%s' % self.key().id(),
+                }
 
-        for key, prop in self.properties().iteritems():
-            value = getattr(self, key)
-
-            if value is None or isinstance(value, SIMPLE_TYPES):
-                output[key] = value
-            elif isinstance(value, datetime.date):
-                # Convert date/datetime to ISO 8601
-                output[key] = value.strftime('%Y-%m-%dT%H:%M:%SZ')
-            else:
-                raise ValueError('Cannot encode ' + repr(prop))
-
-        return output
 
 
 class UserAchievement(db.Model):

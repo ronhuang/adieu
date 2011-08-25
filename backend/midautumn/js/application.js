@@ -54,6 +54,49 @@ $(document).ready(function(){
 
   // object posted
   var objectPosted = function (data, textStatus) {
+    var field = $('#add input[name=title]');
+    var button = $('#add button[type=submit]')
+
+    if (data.result == 'success') {
+      var latest = $('#list .row:first');
+      var latest_title = latest.find('.title').text()
+
+      for (var i in data.objects) {
+        var obj = data.objects[i];
+
+        if (latest_title == obj.title) {
+          // should only happen at the very last obj,
+          // due to the poor resolution of timestamp
+          continue;
+        }
+
+        var cloned = $('#list-template .row').clone();
+
+        var fb_like = '<fb:like href="' + obj.absolute_url + '" send="false" ' +
+          'layout="button_count" width="200" show_faces="false" ' +
+          'action="like"></fb:like>';
+        $(fb_like).appendTo(cloned.find('.share'));
+
+        var fb_comment = '<fb:comments href="' + obj.absolute_url + '" num_posts="2" width="400"></fb:comments>';
+        $(fb_comment).appendTo(cloned.find('.comment'));
+
+        cloned.find('.title').text(obj.title);
+        cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
+        cloned.find('img:first').attr('src', obj.owner_picture);
+        cloned.find('.timestamp').text(obj.timestamp);
+
+        cloned.insertBefore(latest)
+        FB.XFBML.parse(cloned[0]);
+      }
+
+      // show achievement
+    } else {
+      // show error message
+    }
+
+    field.removeAttr('disabled');
+    button.removeClass('disabled');
+    field.val('');
   };
 
   // The url that was liked is returned
@@ -153,7 +196,7 @@ $(document).ready(function(){
 
 
   // prevent invalid input...
-  $('input[name=title]').keyup(function () {
+  $('#add input[name=title]').keyup(function () {
     var length = $(this).val().length;
     var btn = $('button[type=submit]');
     if (length > 0) {
@@ -166,12 +209,23 @@ $(document).ready(function(){
   $('#add form').submit(function (e) {
     e.preventDefault();
 
-    var length = $('input[name=title]').val().length;
+    var field = $('#add input[name=title]');
+    var button = $('#add button[type=submit]')
+
+    var length = field.val().length;
     if (length <= 0) {
       return false;
     }
 
-    $.post('/api/object', $(this).serialize(), objectPosted, 'json');
+    // update timestamp (of the latest object) in the form
+    var latest = $('#list .row:first .timestamp').text()
+    $('#add input[name=timestamp]').val(latest)
+
+    $.post('/api/object', $('#add form').serialize(), objectPosted, 'json');
+
+    // disable field and button
+    field.attr('disabled', 'disabled');
+    button.addClass('disabled');
   });
 
 

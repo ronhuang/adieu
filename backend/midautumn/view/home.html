@@ -79,6 +79,7 @@
                   <div class="input">
                     <input class="xlarge" name="title" size="30" type="text">
                     <input name="owner" value="{{ profile_id }}" type="hidden">
+                    <input name="timestamp" value="0" type="hidden">
                     <button type="submit" class="btn primary disabled">送出</button>
                   </div>
                 </div>
@@ -88,14 +89,15 @@
         </div>
       </section>
 
-      <section id="list">
-        <div class="row" style="display: none;">
+      <section id="list-template" style="display: none;">
+        <div class="row">
           <div class="span2 columns offset1">
             <img alt="推薦者圖示" src="img/blank.jpg" width="64" height="64">
           </div>
           <div class="span7 columns">
             <h2 class="title"></h2>
             <a class="timeago" href="#" title="2008-07-17T09:24:17Z"></a>
+            <span class="timestamp" style="display: none;"></span>
             <div class="share"></div>
             <div class="comment"></div>
           </div>
@@ -111,6 +113,7 @@
           <div class="span7 columns">
             <h2 class="title">{{ obj.title }}</h2>
             <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
+            <span class="timestamp" style="display: none;">{{ obj.timestamp }}</span>
             <div class="share">
               <fb:like href="{{ obj.absolute_url }}" send="false" layout="button_count" width="200" show_faces="false" action="like"></fb:like>
             </div>
