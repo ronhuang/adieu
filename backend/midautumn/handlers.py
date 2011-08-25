@@ -4,6 +4,9 @@
 # See LICENSE for details.
 
 
+from google.appengine.dist import use_library
+use_library('django', '1.2')
+
 import logging
 import midautumn.facebook as facebook
 from midautumn.models import FacebookUser
