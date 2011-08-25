@@ -10,7 +10,7 @@ import logging
 from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext import db
 from django.utils import simplejson as json
-from midautumn.models import MidautumnObject, Achievement
+from midautumn.models import MidautumnObject, UserAchievement
 
 
 ITEM_OFFSET = 1000
@@ -52,12 +52,12 @@ def _check_item(obj):
     achievement_id = ITEM_OFFSET + ITEM_KEY.index(title)
 
     # check if already received achievement
-    query = Achievement.gql('WHERE owner = :1 AND achievement_id = :2', owner, achievement_id)
+    query = UserAchievement.gql('WHERE owner = :1 AND achievement_id = :2', owner, achievement_id)
     if query.count() > 0:
         return []
 
-    achi = Achievement(owner=owner, achievement_id=achievement_id)
-    key = achi.put()
+    ua = UserAchievement(owner=owner, achievement_id=achievement_id)
+    key = ua.put()
 
     description, icon = ITEM_VALUE[title]
     return [{'key': key.id(), 'achievement_id': achievement_id, 'description': description, 'icon': icon}]
@@ -72,8 +72,8 @@ def _check_item_count(obj):
         return []
 
     achievement_id = ITEM_COUNT_OFFSET + count
-    achi = Achievement(owner=owner, achievement_id=achievement_id)
-    key = achi.put()
+    ua = UserAchievement(owner=owner, achievement_id=achievement_id)
+    key = ua.put()
 
     description, icon = ITEM_COUNT_VALUE[count]
     return [{'key': key.id(), 'achievement_id': achievement_id, 'description': description, 'icon': icon}]

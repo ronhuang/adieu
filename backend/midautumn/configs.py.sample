@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+# Midautumn
+# Copyright 2011 Ron Huang
+# See LICENSE for details.
+
+
+FACEBOOK_APP_ID = "your app id"
+FACEBOOK_APP_SECRET = "your app secret"

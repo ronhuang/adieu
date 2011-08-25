@@ -10,23 +10,31 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 from midautumn.models import MidautumnObject
+from midautumn.handlers import BaseHandler
 
 
-class HomeHandler(webapp.RequestHandler):
+class HomeHandler(BaseHandler):
     def get(self):
+        if self.current_user:
+            self.pagename = 'home.html'
+            self.args = {}
+        else:
+            self.pagename = 'register.html'
+            self.args = None
+
         dirname = os.path.dirname(__file__)
-        path = os.path.join(dirname, 'view', 'home.html')
-        self.response.out.write(template.render(path, {}))
+        path = os.path.join(dirname, 'view', self.pagename)
+        self.response.out.write(template.render(path, self.args))
 
 
-class ProfileHandler(webapp.RequestHandler):
+class ProfileHandler(BaseHandler):
     def get(self, profile_id):
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', 'profile.html')
         self.response.out.write(template.render(path, {'profile_id': profile_id}))
 
 
-class ObjectHandler(webapp.RequestHandler):
+class ObjectHandler(BaseHandler):
     def get(self, object_id):
         pagename = None
         pagedata = None
@@ -44,7 +52,7 @@ class ObjectHandler(webapp.RequestHandler):
         self.response.out.write(template.render(path, pagedata))
 
 
-class ChannelHandler(webapp.RequestHandler):
+class ChannelHandler(BaseHandler):
     def get(self):
         cache_expire = 60 * 60 * 24 * 365
         self.response.headers['Cache-Control'] = 'public, maxage=%d' % cache_expire

@@ -29,3 +29,17 @@ class MidautumnObject(db.Model):
                 raise ValueError('Cannot encode ' + repr(prop))
 
         return output
+
+
+class UserAchievement(db.Model):
+    owner = db.StringProperty(required=True)
+    achievement_id = db.IntegerProperty(required=True)
+
+
+class FacebookUser(db.Model):
+    id = db.StringProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+    updated = db.DateTimeProperty(auto_now=True)
+    name = db.StringProperty(required=True)
+    profile_url = db.StringProperty(required=True)
+    access_token = db.StringProperty(required=True)
