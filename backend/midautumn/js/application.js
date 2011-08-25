@@ -52,6 +52,9 @@ $(document).ready(function(){
     document.getElementById('fb-root').appendChild(e);
   }());
 
+  // object posted
+  var objectPosted = function (data, textStatus) {
+  };
 
   // The url that was liked is returned
   var edgeCreated = function (url) {
@@ -160,11 +163,15 @@ $(document).ready(function(){
     }
   });
 
-  $('#add form').submit(function () {
+  $('#add form').submit(function (e) {
+    e.preventDefault();
+
     var length = $('input[name=title]').val().length;
     if (length <= 0) {
       return false;
     }
+
+    $.post('/api/object', $(this).serialize(), objectPosted, 'json');
   });
 
 
