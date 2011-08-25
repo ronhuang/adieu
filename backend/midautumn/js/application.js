@@ -74,18 +74,9 @@ $(document).ready(function(){
   var loginStatusChanged = function (response) {
     // subscribe here to avoid invoking loginStatusChanged twice.
     FB.Event.subscribe('auth.statusChange', loginStatusChanged);
-
-    updateUi(response);
-    updateUserInfo(response);
-    updateObjects(response);
   };
 
   var updateObjects = function  (response) {
-    if ($('#list').length <= 0) {
-      // Only update when there is a container named 'list'.
-      return;
-    }
-
     if (response.authResponse) {
       $.ajax({
         url: 'api/objects',
@@ -125,49 +116,6 @@ $(document).ready(function(){
     }
   };
 
-  var updateUserInfo = function (response) {
-    if (response.authResponse) {
-      // Logged in
-      FB.api('/me', function (user) {
-        if (user) {
-          $('a.menu span').text(user.name);
-          $('a.menu img').attr('src', 'http://graph.facebook.com/' + user.id + '/picture?type=square');
-          $('a.profile').attr('href', 'profile/' + user.id);
-          $('input[name=owner]').val(user.id);
-        }
-      });
-    } else {
-      // Not logged in
-      $('a.menu span').text('');
-      $('a.menu img').attr('src', '/img/blank.jpg');
-      $('a.profile').attr('href', '#');
-      $('input[name=owner]').val('');
-    }
-  };
-
-  function updateUi(response) {
-    var privateItems = ['#navbar', '#add', '#list'];
-    var publicItems = ['#header', '#about', '#login'];
-
-    if (response.authResponse) {
-      // Logged in
-      $.each(privateItems, function (index, value) {
-        $(value).show();
-      });
-      $.each(publicItems, function (index, value) {
-        $(value).hide();
-      });
-    } else {
-      // Not logged in
-      $.each(privateItems, function (index, value) {
-        $(value).hide();
-      });
-      $.each(publicItems, function (index, value) {
-        $(value).show();
-      });
-    }
-  };
-
 
   // menu
   $("body").bind("click", function(e) {
@@ -195,7 +143,9 @@ $(document).ready(function(){
 
   // logout
   $("a.logout").click(function (e) {
-    FB.logout(loginStatusChanged);
+    FB.logout(function (response) {
+      document.location.reload(true);
+    });
   });
 
 
@@ -216,5 +166,9 @@ $(document).ready(function(){
       return false;
     }
   });
+
+
+  // User friendly time representation
+  $('.timeago').timeago();
 
 });

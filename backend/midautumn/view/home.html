@@ -49,13 +49,13 @@
           </h3>
           <ul>
             <li class="active"><a href="/">Home</a></li>
-            <li><a href="#" class="profile">Profile</a></li>
+            <li><a href="{{ profile_url }}" class="profile">Profile</a></li>
           </ul>
           <ul class="nav secondary-nav">
             <li class="menu">
               <a href="#" class="menu">
-                <img alt="使用者圖示" src="img/blank.jpg" width="20" height="20">
-                <span></span>
+                <img alt="使用者圖示" src="{{ profile_picture }}" width="20" height="20">
+                <span>{{ profile_name }}</span>
               </a>
               <ul class="menu-dropdown" style="display: none;">
                 <li><a href="#">Secondary link</a></li>
@@ -65,15 +65,6 @@
           </ul>
         </div>
       </div>
-    </div>
-
-    <div id="header" style="display: none;">
-      <div class="container">
-        <h1>中秋烤肉</h1>
-        <p class="lead">
-          推薦中秋烤肉的食材。
-        </p>
-      </div> <!-- /container -->
     </div>
 
     <div class="container">
@@ -87,7 +78,7 @@
                 <div class="clearfix">
                   <div class="input">
                     <input class="xlarge" name="title" size="30" type="text">
-                    <input name="owner" value="" type="hidden">
+                    <input name="owner" value="{{ profile_id }}" type="hidden">
                     <button type="submit" class="btn primary disabled">送出</button>
                   </div>
                 </div>
@@ -111,38 +102,24 @@
         </div>
       </section>
 
-      <section id="about" style="display: none;">
-        <div class="page-header">
-          <h1>關於</h1>
-        </div>
+      <section id="list">
+        {% for obj in objects %}
         <div class="row">
-          <div class="span8 columns">
-            <h3>中秋烤肉</h3>
-            <p>[TODO]: 中秋烤肉</p>
+          <div class="span2 columns offset1">
+            <img alt="推薦者圖示" src="{{ obj.owner_picture }}" width="64" height="64">
           </div>
-          <div class="span8 columns">
-            <h3>這個網站</h3>
-            <p>[TODO]: 這個網站</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="login" style="display: none;">
-        <div class="page-header">
-          <h1>加入中秋烤肉</h1>
-        </div>
-        <div class="row">
-          <div class="span8 columns">
-            <h3>使用 Facebook 加入</h3>
-            <fb:login-button show-faces="true" width="450" max-rows="3"></fb:login-button>
-          </div>
-          <div class="span8 columns">
-            <h3>給我一個讚</h3>
-            <fb:like send="true" width="450" show_faces="true" action="like" font=""></fb:like>
+          <div class="span7 columns">
+            <h2 class="title">{{ obj.title }}</h2>
+            <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
+            <div class="share">
+              <fb:like href="{{ obj.absolute_url }}" send="false" layout="button_count" width="200" show_faces="false" action="like"></fb:like>
+            </div>
+            <div class="comment">
+              <fb:comments href="{{ obj.absolute_url }}" num_posts="2" width="400"></fb:comments>
+            </div>
           </div>
         </div>
-        <div class="container">
-        </div>
+        {% endfor %}
       </section>
 
     </div>
