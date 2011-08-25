@@ -39,6 +39,10 @@ $(document).ready(function(){
     });
 
     FB.getLoginStatus(loginStatusChanged);
+    FB.Event.subscribe('edge.create', edgeCreated);
+    FB.Event.subscribe('edge.remove', edgeRemoved);
+    FB.Event.subscribe('comment.create', commentCreated);
+    FB.Event.subscribe('comment.remove', commentRemoved);
   };
 
   (function() {
@@ -49,13 +53,31 @@ $(document).ready(function(){
   }());
 
 
+  // The url that was liked is returned
+  var edgeCreated = function (url) {
+  };
+
+  // The url that was unliked is returned
+  var edgeRemoved = function (url) {
+  };
+
+  // {href: '', commentID: ''}
+  var commentCreated = function (response) {
+  };
+
+  // {href: '', commentID: ''}
+  var commentRemoved = function (response) {
+  };
+
+
   // update info after login status changed
   var loginStatusChanged = function (response) {
+    // subscribe here to avoid invoking loginStatusChanged twice.
+    FB.Event.subscribe('auth.statusChange', loginStatusChanged);
+
     updateUi(response);
     updateUserInfo(response);
     updateObjects(response);
-
-    FB.Event.subscribe('auth.statusChange', loginStatusChanged);
   };
 
   var updateObjects = function  (response) {

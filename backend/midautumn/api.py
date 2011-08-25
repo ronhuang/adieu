@@ -12,6 +12,7 @@ from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext import db
 from django.utils import simplejson as json
 from midautumn.models import MidautumnObject
+import midautumn.achievement as achievement
 
 
 class ObjectHandler(webapp.RequestHandler):
@@ -29,11 +30,14 @@ class ObjectHandler(webapp.RequestHandler):
 
         # Not duplicated
         mo = MidautumnObject(title=title, owner=owner)
-        key = mo.put()
+        mo.put()
+
+        # check achievements
+        achievements = []
+        achievements.extend(achievement.check_post(mo))
 
         self.response.headers['Content-Type'] = 'application/json'
-        pubtime = mo.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ')
-        self.response.out.write(json.dumps({'result': 'success', 'title': mo.title, 'owner': mo.owner, 'pubtime': pubtime, 'key': key.id()}))
+        self.response.out.write(json.dumps({'result': 'success', 'objects': [mo.to_dict(),], 'achievements': achievements}))
 
     def get(self, key):
         mo = MidautumnObject.get_by_id(int(key))
@@ -45,8 +49,7 @@ class ObjectHandler(webapp.RequestHandler):
             self.response.out.write(json.dumps({'result': 'not_exist', 'key': key}))
         else:
             self.response.headers['Content-Type'] = 'application/json'
-            pubtime = mo.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ')
-            self.response.out.write(json.dumps({'result': 'success', 'title': mo.title, 'owner': mo.owner, 'pubtime': mo.pubtime, 'key': key}))
+            self.response.out.write(json.dumps({'result': 'success', 'objs': [mo.to_dict(),]}))
 
 
 class ObjectsHandler(webapp.RequestHandler):
@@ -64,8 +67,7 @@ class ObjectsHandler(webapp.RequestHandler):
         objs = []
 
         for result in results:
-            pubtime = result.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ')
-            objs.append({'title': result.title, 'owner': result.owner, 'pubtime': pubtime, 'key': result.key().id()})
+            objs.append(result.to_dict())
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps({'result': 'success', 'objects': objs, 'cursor': query.cursor()}))
