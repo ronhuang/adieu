@@ -37,6 +37,12 @@ import cgi
 import hashlib
 import time
 import urllib
+import urllib2
+import re
+import logging
+import base64
+import hmac
+
 
 # Find a JSON parser
 try:
@@ -212,3 +218,82 @@ def get_user_from_cookie(cookies, app_id, app_secret):
         return args
     else:
         return None
+
+
+def parse_signed_request(signed_request, secret):
+    encoded_sig, payload = signed_request.split('.', 2)
+    sig = base64_urldecode(encoded_sig)
+    data = _parse_json(base64_urldecode(payload))
+    if data.get('algorithm').upper() != 'HMAC-SHA256':
+        return None
+    else:
+        expected_sig = hmac.new(secret, msg=payload, digestmod=hashlib.sha256).digest()
+    if sig != expected_sig:
+        return None
+    return data
+
+
+def base64_urldecode(data):
+    # http://qugstart.com/blog/ruby-and-rails/facebook-base64-url-decode-for-signed_request/
+    # 1. Pad the encoded string with "+".
+    # See http://fi.am/entry/urlsafe-base64-encodingdecoding-in-two-lines/
+    data += "=" * (4 - (len(data) % 4) % 4)
+
+    # 2. Replace the character "-" with "=", and '_' with '/'
+    tran_tab = dict(zip(map(ord, u'-_'), u'+/'))
+    data = data.translate(tran_tab)
+
+    return base64.b64decode(data)
+
+
+def get_access_token_from_code(code, app_id, app_secret, redirect_url=None):
+    """ OAuth2 code to retrieve an application access token. """
+    data = {
+        'client_id' : app_id,
+        'client_secret' : app_secret,
+        'code' : code,
+        }
+    if redirect_url:
+        data['redirect_uri'] = redirect_url
+    else:
+        data['redirect_uri'] = ''
+    return get_app_token_helper(data)
+
+
+def get_app_token_helper(data=None):
+    if not data:
+        data = {}
+    try:
+        token_request = urllib.urlencode(data)
+        app_token = urllib2.urlopen("https://graph.facebook.com/oauth/access_token?%s" % token_request).read()
+    except urllib2.HTTPError, e:
+        logging.debug("Exception trying to grab Facebook App token (%s)" % e)
+        return None
+
+    matches = re.match(r"access_token=(?P<token>[^&]*)", app_token).groupdict()
+    return matches.get("token")
+
+
+def get_signed_fb_request(cookies, app_id, app_secret):
+    """Backwards compatibility routine to create a cookie_response dictionary that can be
+    used throughout our app."""
+    cookie = cookies.get("fbsr_" + app_id, "")
+    if not cookie: return None
+    data = parse_signed_request(signed_request=cookie, secret=app_secret)
+    cookie_response = {}
+    if data:
+        response = get_access_token_from_code(data.get('code', ''), app_id, app_secret)
+        if response:
+            # See http://www.quora.com/Do-the-OAuth2-access-tokens-in-the-new-Facebook-Graph-API-expire
+            (app_id, session_key, digest) = response.split('|')
+            # non_expiring_token
+            if re.match("^(.*?)\-(.*?)$", session_key):
+                cookie_response["expires"] = "0"
+            else:
+               cookie_response["expires"] = "1"
+            cookie_response['fbsr_signed'] = True   # for debugging purposes
+            cookie_response['uid'] = data['user_id']
+            cookie_response['access_token'] = response
+            cookie_response['session_key'] = session_key
+            return cookie_response
+    return None
