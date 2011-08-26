@@ -29,7 +29,7 @@ class HomeHandler(BaseHandler):
             query.order('-pubtime')
 
             objects = []
-            results = query.fetch(20)
+            results = query.fetch(10)
             for obj in results:
                 objects.append(obj.to_dict())
 
@@ -39,7 +39,8 @@ class HomeHandler(BaseHandler):
                     'profile_name': self.current_user.name,
                     'profile_id': self.current_user.id,
                     'objects': objects,
-                    'end_cursor': query.cursor()
+                    'cursor': query.cursor(),
+                    'more': len(objects) >= 10,
                     }
         else:
             pagename = 'register.html'

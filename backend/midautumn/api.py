@@ -17,9 +17,10 @@ from google.appengine.ext import db
 from django.utils import simplejson as json
 from midautumn.models import MidautumnObject
 import midautumn.achievement as achievement
+from midautumn.handlers import BaseHandler
 
 
-class ObjectHandler(webapp.RequestHandler):
+class ObjectHandler(BaseHandler):
 
     def post(self):
         title = self.request.get('title')
@@ -69,25 +70,39 @@ class ObjectHandler(webapp.RequestHandler):
             self.response.out.write(json.dumps({'result': 'success', 'objs': [mo.to_dict(),]}))
 
 
-class ObjectsHandler(webapp.RequestHandler):
+class ObjectsHandler(BaseHandler):
 
     def get(self):
         cursor = self.request.get('cursor', None)
 
-        query = MidautumnObject.all()
-        query.order('-pubtime')
-        if cursor:
-            query.with_cursor(cursor)
+        args = None
 
-        results = query.fetch(20)
+        if self.current_user:
+            # load initial set of data
+            query = MidautumnObject.all()
+            query.order('-pubtime')
+            if cursor:
+                query.with_cursor(cursor)
 
-        objs = []
+            objects = []
+            results = query.fetch(10)
+            for obj in results:
+                objects.append(obj.to_dict())
 
-        for result in results:
-            objs.append(result.to_dict())
+            args = {'result': 'success',
+                    'profile_url': '/profile/%s' % self.current_user.id,
+                    'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
+                    'profile_name': self.current_user.name,
+                    'profile_id': self.current_user.id,
+                    'objects': objects,
+                    'cursor': query.cursor(),
+                    'more': len(objects) >= 10,
+                    }
+        else:
+            args = {'result': 'not_authorized'}
 
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps({'result': 'success', 'objects': objs, 'cursor': query.cursor()}))
+        self.response.out.write(json.dumps(args))
 
 
 def main():

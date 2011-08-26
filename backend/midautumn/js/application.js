@@ -53,7 +53,7 @@ $(document).ready(function(){
   }());
 
   // object posted
-  var objectPosted = function (data, textStatus) {
+  var objectPosted = function (data, status) {
     var field = $('#add input[name=title]');
     var button = $('#add button[type=submit]')
 
@@ -85,7 +85,7 @@ $(document).ready(function(){
         cloned.find('img:first').attr('src', obj.owner_picture);
         cloned.find('.timestamp').text(obj.timestamp);
 
-        cloned.insertBefore(latest)
+        cloned.insertBefore(latest);
         FB.XFBML.parse(cloned[0]);
       }
 
@@ -103,7 +103,7 @@ $(document).ready(function(){
       html += '</div>';
 
       $(html).insertAfter($('#notification .placement'));
-      setTimeout("$('#notification .achievement').remove();", 10000);
+      setTimeout("$('#notification .achievement').remove();", 5000);
     } else {
       // show error message
     }
@@ -267,6 +267,59 @@ $(document).ready(function(){
 
       comment.slideUp();
     }
+  });
+
+
+  // load more objects
+  $('#next-action .more-button').click(function () {
+    var btn = $('#next-action .more-button');
+    var throbber = $('#next-action .more-throbber');
+
+    btn.hide();
+    throbber.show();
+
+    $.get('/api/objects', {cursor: $('span.cursor').text()}, function (data, status) {
+      if (data.result == 'success') {
+        var container = $('#list');
+
+        for (var i in data.objects) {
+          var obj = data.objects[i];
+          var cloned = $('#list-template .row').clone();
+
+          var fb_like = '<fb:like href="' + obj.absolute_url + '" send="false" ' +
+            'layout="button_count" width="200" show_faces="false" ' +
+            'action="like"></fb:like>';
+          $(fb_like).appendTo(cloned.find('.share'));
+
+          var fb_comment_count = '<fb:comments-count href="' + obj.absolute_url + '">0</fb:comments>';
+          $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));
+
+          cloned.find('.title').text(obj.title);
+          cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
+          cloned.find('img:first').attr('src', obj.owner_picture);
+          cloned.find('.timestamp').text(obj.timestamp);
+
+          cloned.appendTo(container);
+          FB.XFBML.parse(cloned[0]);
+        }
+
+        // update cursor
+        $('span.cursor').text(data.cursor);
+
+        // if no more objects, indicate to user
+        if (data.more) {
+          btn.show();
+        } else {
+          var symbol = $('#next-action .more-empty');
+          symbol.show();
+        }
+      } else {
+        btn.show();
+      }
+
+      throbber.hide();
+    }, 'json');
+
   });
 
 });
