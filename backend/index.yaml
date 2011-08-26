@@ -19,3 +19,8 @@ indexes:
   properties:
   - name: votes
     direction: desc
+
+- kind: MidautumnObject
+  properties:
+  - name: owner
+  - name: pubtime

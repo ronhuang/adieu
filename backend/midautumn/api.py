@@ -15,7 +15,7 @@ from google.appengine.ext.webapp import util
 from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext import db
 from django.utils import simplejson as json
-from midautumn.models import MidautumnObject
+from midautumn.models import MidautumnObject, FacebookEdge, FacebookComment
 import midautumn.achievement as achievement
 from midautumn.handlers import BaseHandler
 
@@ -90,16 +90,84 @@ class ObjectsHandler(BaseHandler):
                 objects.append(obj.to_dict())
 
             args = {'result': 'success',
-                    'profile_url': '/profile/%s' % self.current_user.id,
-                    'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
-                    'profile_name': self.current_user.name,
-                    'profile_id': self.current_user.id,
                     'objects': objects,
                     'cursor': query.cursor(),
                     'more': len(objects) >= 10,
                     }
+            args.update(self.current_user_profile)
         else:
             args = {'result': 'not_authorized'}
+
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(args))
+
+
+class EdgeHandler(BaseHandler):
+
+    def post(self):
+        action = self.request.get('action', None)
+        url = self.request.get('url', None)
+
+        args = None
+
+        if not self.current_user:
+            args = {'result': 'not_authorized'}
+        elif action not in ('create', 'remove'):
+            args = {'result': 'unknown_action'}
+        elif not url:
+            args = {'result': 'missing_parameter'}
+        else:
+            q = FacebookEdge.all()
+            q.filter('owner =', self.current_user.id)
+            q.filter('url =', url)
+            edge = q.get()
+            if not edge:
+                edge = FacebookEdge(owner=self.current_user.id, url=url)
+            if action == 'create':
+                edge.connected = True
+                edge.created = True
+            else:
+                edge.connected = False
+                edge.removed = True
+            edge.put()
+
+            args = {'result': 'success'}
+
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(args))
+
+
+class CommentHandler(BaseHandler):
+
+    def post(self):
+        action = self.request.get('action', None)
+        href = self.request.get('href', None)
+        commentID = self.request.get('commentID', None)
+
+        args = None
+
+        if not self.current_user:
+            args = {'result': 'not_authorized'}
+        elif action not in ('create', 'remove'):
+            args = {'result': 'unknown_action'}
+        elif not href or not commentID:
+            args = {'result': 'missing_parameter'}
+        else:
+            q = FacebookComment.all()
+            q.filter('owner =', self.current_user.id)
+            q.filter('href =', href)
+            q.filter('commentID =', commentID)
+            edge = q.get()
+
+            if (action == 'create' and edge) or (action == 'remove' and not edge):
+                args = {'result': 'invalid_state'}
+            elif action == 'create':
+                edge = FacebookComment(owner=self.current_user.id, href=href, comment_id=commentID)
+                edge.put()
+                args = {'result': 'success'}
+            else:
+                edge.delete()
+                args = {'result': 'success'}
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(args))
@@ -110,6 +178,8 @@ def main():
         ('/api/object', ObjectHandler),
         ('/api/object/([0-9]+)$', ObjectHandler),
         ('/api/objects', ObjectsHandler),
+        ('/api/edge', EdgeHandler),
+        ('/api/comment', CommentHandler),
         ]
     application = webapp.WSGIApplication(actions, debug=True)
     util.run_wsgi_app(application)

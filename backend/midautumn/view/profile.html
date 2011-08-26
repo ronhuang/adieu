@@ -1,0 +1,57 @@
+{% extends "base-menu.html" %}
+
+{% block body-class %}profile{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+      <section id="recommendations">
+        <div class="page-header">
+          <h1>推薦的東西<small>按照推薦時間排序</small></h1>
+        </div>
+        {% for obj in objects %}
+        {% if forloop.counter0|divisibleby:4 %}
+        <div class="row">
+        {% endif %}
+          <div class="span4 columns">
+            <h4>{{ obj.title }}</h4>
+            <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
+          </div>
+        {% if forloop.counter|divisibleby:4 %}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </section>
+
+      <section id="recommendations">
+        <div class="page-header">
+          <h1>成就<small>你目前所擁有的成就</small></h1>
+          <div class="row">
+          </div>
+        </div>
+      </section>
+
+      <section id="others">
+        <div class="page-header">
+          <h1>其他<small>不重要的統計</small></h1>
+        </div>
+        <div class="row">
+          <div class="span4 columns">
+            <h4>讚了 {{ liked_count }} 個東西</h4>
+          </div>
+          <div class="span4 columns">
+            <h4>給過 {{ liked_created_count }} 個讚</h4>
+          </div>
+          <div class="span4 columns">
+            <h4>取消過 {{ liked_removed_count }} 個讚</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="span4 columns">
+            <h4>給了 {{ comment_count }} 個註解</h4>
+          </div>
+        </div>
+      </section>
+
+    </div>
+{% endblock %}

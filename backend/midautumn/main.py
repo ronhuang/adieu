@@ -14,7 +14,7 @@ from datetime import datetime, timedelta, tzinfo
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
-from midautumn.models import MidautumnObject
+from midautumn.models import MidautumnObject, FacebookEdge, FacebookComment
 from midautumn.handlers import BaseHandler
 
 
@@ -34,14 +34,11 @@ class HomeHandler(BaseHandler):
                 objects.append(obj.to_dict())
 
             pagename = 'home.html'
-            args = {'profile_url': '/profile/%s' % self.current_user.id,
-                    'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
-                    'profile_name': self.current_user.name,
-                    'profile_id': self.current_user.id,
-                    'objects': objects,
+            args = {'objects': objects,
                     'cursor': query.cursor(),
                     'more': len(objects) >= 10,
                     }
+            args.update(self.current_user_profile)
         else:
             pagename = 'register.html'
             args = None
@@ -53,9 +50,41 @@ class HomeHandler(BaseHandler):
 
 class ProfileHandler(BaseHandler):
     def get(self, profile_id):
+        args = {}
+
+        query = MidautumnObject.all()
+        query.filter('owner =', profile_id)
+        query.order('pubtime')
+        objects = []
+        for obj in query:
+            objects.append(obj.to_dict())
+        args['objects'] = objects
+
+        query = FacebookEdge.all()
+        query.filter('owner =', profile_id)
+        query.filter('connected =', True)
+        args['liked_count'] = query.count()
+
+        query = FacebookEdge.all()
+        query.filter('owner =', profile_id)
+        query.filter('created =', True)
+        args['liked_created_count'] = query.count()
+
+        query = FacebookEdge.all()
+        query.filter('owner =', profile_id)
+        query.filter('removed =', True)
+        args['liked_removed_count'] = query.count()
+
+        query = FacebookComment.all()
+        query.filter('owner =', profile_id)
+        args['comment_count'] = query.count()
+
+        # added profile related info
+        args.update(self.current_user_profile)
+
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', 'profile.html')
-        self.response.out.write(template.render(path, {'profile_id': profile_id}))
+        self.response.out.write(template.render(path, args))
 
 
 class ObjectHandler(BaseHandler):
@@ -71,18 +100,7 @@ class ObjectHandler(BaseHandler):
             pagename = "object.html"
             args = mo.to_dict()
 
-        if self.current_user:
-            args.update({'profile_url': '/profile/%s' % self.current_user.id,
-                         'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
-                         'profile_name': self.current_user.name,
-                         'profile_id': self.current_user.id,
-                         })
-        else:
-            args.update({'profile_url': '#',
-                         'profile_picture': '/img/blank.jpg',
-                         'profile_name': '',
-                         'profile_id': '',
-                         })
+        args.update(self.current_user_profile)
 
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', pagename)

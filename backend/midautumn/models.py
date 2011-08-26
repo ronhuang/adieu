@@ -50,3 +50,17 @@ class FacebookUser(db.Model):
     name = db.StringProperty(required=True)
     profile_url = db.StringProperty(required=True)
     access_token = db.StringProperty(required=True)
+
+
+class FacebookEdge(db.Model):
+    owner = db.StringProperty(required=True)
+    url = db.StringProperty(required=True)
+    connected = db.BooleanProperty()
+    created = db.BooleanProperty()
+    removed = db.BooleanProperty()
+
+
+class FacebookComment(db.Model):
+    owner = db.StringProperty(required=True)
+    href = db.StringProperty(required=True)
+    comment_id = db.StringProperty(required=True)

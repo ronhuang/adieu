@@ -103,7 +103,7 @@ $(document).ready(function(){
       html += '</div>';
 
       $(html).insertAfter($('#notification .placement'));
-      setTimeout("$('#notification .achievement').remove();", 5000);
+      setTimeout("$('#notification .achievement').remove();", 10000);
     } else {
       // show error message
     }
@@ -114,18 +114,22 @@ $(document).ready(function(){
 
   // The url that was liked is returned
   var edgeCreated = function (url) {
+    $.post('/api/edge', {url: url, action: 'create'});
   };
 
   // The url that was unliked is returned
   var edgeRemoved = function (url) {
+    $.post('/api/edge', {url: url, action: 'remove'});
   };
 
   // {href: '', commentID: ''}
   var commentCreated = function (response) {
+    $.post('/api/comment', {href: response.href, commentID: response.commentID, action: 'create'});
   };
 
   // {href: '', commentID: ''}
   var commentRemoved = function (response) {
+    $.post('/api/comment', {href: response.href, commentID: response.commentID, action: 'remove'});
   };
 
 
@@ -199,6 +203,14 @@ $(document).ready(function(){
     return false;
   });
 
+  // highlight active primary menu
+  (function () {
+    var body = $('body');
+    if (body.hasClass('home'))
+      $('.primary-nav .home').addClass('active');
+    if (body.hasClass('profile'))
+      $('.primary-nav .profile').addClass('active');
+  }());
 
   // logout
   $("a.logout").click(function (e) {

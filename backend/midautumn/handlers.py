@@ -47,3 +47,18 @@ class BaseHandler(webapp.RequestHandler):
                     user.put()
                 self._current_user = user
         return self._current_user
+
+    @property
+    def current_user_profile(self):
+        if self.current_user:
+            return {'profile_url': '/profile/%s' % self.current_user.id,
+                    'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
+                    'profile_name': self.current_user.name,
+                    'profile_id': self.current_user.id,
+                    }
+        else:
+            return {'profile_url': '#',
+                    'profile_picture': '/img/blank.jpg',
+                    'profile_name': '',
+                    'profile_id': '',
+                    }
