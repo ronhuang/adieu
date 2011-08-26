@@ -77,8 +77,8 @@ $(document).ready(function(){
           'action="like"></fb:like>';
         $(fb_like).appendTo(cloned.find('.share'));
 
-        var fb_comment = '<fb:comments href="' + obj.absolute_url + '" num_posts="2" width="400"></fb:comments>';
-        $(fb_comment).appendTo(cloned.find('.comment'));
+        var fb_comment_count = '<fb:comments-count href="' + obj.absolute_url + '">0</fb:comments>';
+        $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));
 
         cloned.find('.title').text(obj.title);
         cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
@@ -231,5 +231,29 @@ $(document).ready(function(){
 
   // User friendly time representation
   $('.timeago').timeago();
+
+
+  // comment expand/collapse
+  $('#list .comment-container .banner').live('click', function () {
+    var btn = $(this).find('.button');
+    var comment = $(this).next();
+
+    if (!btn.hasClass('expand')) {
+      btn.addClass('expand');
+
+      if (comment.find('fb\\:comments').length == 0) {
+        // create new fb:comments
+        url = $(this).find('fb\\:comments-count').attr('href');
+        $('<fb:comments href="' + url + '" num_posts="2" width="400"></fb:comments>').appendTo(comment);
+        FB.XFBML.parse(comment[0]);
+      }
+
+      comment.slideDown();
+    } else {
+      btn.removeClass('expand');
+
+      comment.slideUp();
+    }
+  });
 
 });

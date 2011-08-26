@@ -21,3 +21,26 @@ a.menu img {
 #list .row img {
   vertical-align: top;
 }
+#list .share {
+  background-color: #FBFBFB;
+  border-bottom: 1px solid #E3E3E3;
+  padding: 8px;
+}
+#list .comment-container .banner {
+  background-color: #FBFBFB;
+  border-bottom: 1px solid #E3E3E3;
+  padding: 8px;
+  cursor: pointer;
+}
+#list .comment-container .button {
+  background-image: url(/img/collapse.png);
+  background-repeat: no-repeat;
+  background-position: 0 5px;
+  float: right;
+  height: 7px;
+  width: 8px;
+  padding-top: 5px;
+}
+#list .comment-container .expand {
+  background-image: url(/img/expand.png);
+}

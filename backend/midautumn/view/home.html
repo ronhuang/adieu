@@ -99,7 +99,13 @@
             <a class="timeago" href="#" title="2008-07-17T09:24:17Z"></a>
             <span class="timestamp" style="display: none;"></span>
             <div class="share"></div>
-            <div class="comment"></div>
+            <div class="comment-container">
+              <div class="banner">
+                <span class="button collapse"></span>
+                <div class="count"><span></span> 個註解</div>
+              </div>
+              <div class="comment" style="display: none;"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -117,8 +123,12 @@
             <div class="share">
               <fb:like href="{{ obj.absolute_url }}" send="false" layout="button_count" width="200" show_faces="false" action="like"></fb:like>
             </div>
-            <div class="comment">
-              <fb:comments href="{{ obj.absolute_url }}" num_posts="2" width="400"></fb:comments>
+            <div class="comment-container">
+              <div class="banner">
+                <span class="button collapse"></span>
+                <div class="count"><fb:comments-count href="{{ obj.absolute_url }}">0</fb:comments-count> 個註解</div>
+              </div>
+              <div class="comment" style="display: none;"></div>
             </div>
           </div>
         </div>
