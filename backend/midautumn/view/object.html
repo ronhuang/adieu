@@ -48,14 +48,14 @@
             <a href="/">中秋烤肉</a>
           </h3>
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#" class="profile">Profile</a></li>
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="{{ profile_url }}" class="profile">Profile</a></li>
           </ul>
           <ul class="nav secondary-nav">
             <li class="menu">
               <a href="#" class="menu">
-                <img alt="使用者圖示" src="/img/blank.jpg" width="20" height="20">
-                <span></span>
+                <img alt="使用者圖示" src="{{ profile_picture }}" width="20" height="20">
+                <span>{{ profile_name }}</span>
               </a>
               <ul class="menu-dropdown" style="display: none;">
                 <li><a href="#">Secondary link</a></li>
