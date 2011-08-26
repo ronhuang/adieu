@@ -67,27 +67,35 @@
       </div>
     </div>
 
-    <div class="container">
-
-      <section id="add">
-        <div class="row">
-          <div class="span16 columns">
-            <form action="/api/object" class="form-stacked" method="post">
-              <fieldset>
-                <legend>想吃什麼？</legend>
-                <div class="clearfix">
-                  <div class="input">
-                    <input class="xlarge" name="title" size="30" type="text">
-                    <input name="owner" value="{{ profile_id }}" type="hidden">
-                    <input name="timestamp" value="0" type="hidden">
-                    <button type="submit" class="btn primary disabled">送出</button>
-                  </div>
+    <div class="container" id="add">
+      <div class="row">
+        <div class="span16 columns">
+          <form action="/api/object" class="form-stacked" method="post">
+            <fieldset>
+              <legend>想吃什麼？</legend>
+              <div class="clearfix">
+                <div class="input">
+                  <input class="xlarge" name="title" size="30" type="text">
+                  <input name="owner" value="{{ profile_id }}" type="hidden">
+                  <input name="timestamp" value="0" type="hidden">
+                  <button type="submit" class="btn primary disabled">送出</button>
                 </div>
-              </fieldset>
-            </form>
-          </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
-      </section>
+      </div>
+    </div>
+
+    <div class="container" id="notification">
+      <div class="row">
+        <div class="span9 columns offset1">
+          <div class="placement"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
 
       <section id="list-template" style="display: none;">
         <div class="row">

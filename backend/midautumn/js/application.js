@@ -90,12 +90,25 @@ $(document).ready(function(){
       }
 
       // show achievement
+      var html = '<div class="alert-message info achievement">';
+      html += '<p><strong>成就</strong></p>';
+      //html += '<a href="#" class="close">x</a>';
+      for (var i in data.achievements) {
+        var achi = data.achievements[i];
+
+        html += '<p>';
+        html += achi.description;
+        html += '</p>';
+      }
+      html += '</div>';
+
+      $(html).insertAfter($('#notification .placement'));
+      setTimeout("$('#notification .achievement').remove();", 10000);
     } else {
       // show error message
     }
 
     field.removeAttr('disabled');
-    button.removeClass('disabled');
     field.val('');
   };
 
