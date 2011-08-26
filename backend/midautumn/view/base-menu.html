@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block base-content %}
+    <div id="navbar" class="topbar">
+      <div class="fill">
+        <div class="container">
+          <h3>
+            <a href="/">中秋烤肉</a>
+          </h3>
+          <ul>
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="{{ profile_url }}" class="profile">Profile</a></li>
+          </ul>
+          <ul class="nav secondary-nav">
+            <li class="menu">
+              <a href="#" class="menu">
+                <img alt="使用者圖示" src="{{ profile_picture }}" width="20" height="20">
+                <span>{{ profile_name }}</span>
+              </a>
+              <ul class="menu-dropdown" style="display: none;">
+                <li><a href="#">Secondary link</a></li>
+                <li><a href="#" class="logout">登出</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+{% block content %}
+{% endblock content %}
+
+{% endblock base-content %}

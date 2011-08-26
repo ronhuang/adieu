@@ -1,65 +1,6 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:fb="http://www.facebook.com/2008/fbml"
-      xmlns:og="http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8">
-    <title>找不到</title>
-    <meta name="description" content="消失的材料。">
-    <meta name="author" content="Ron Huang">
+{% extends "base-menu.html" %}
 
-    <meta property="fb:admins" content="581056929">
-    <meta property="fb:app_id" content="271148119565356">
-
-    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.0.0.min.css" rel="stylesheet">
-    <link href="/css/docs.css" rel="stylesheet">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <script src="/js/jquery.timeago.js"></script>
-    <script src="/js/application.js"></script>
-
-    <link rel="shortcut icon" href="img/favicon.ico">
-    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="img/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="img/apple-touch-icon-114x114.png">
-  </head>
-
-  <body>
-
-    <div id="fb-root"></div>
-
-    <div id="navbar" class="topbar">
-      <div class="fill">
-        <div class="container">
-          <h3>
-            <a href="/">中秋烤肉</a>
-          </h3>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#" class="profile">Profile</a></li>
-          </ul>
-          <ul class="nav secondary-nav">
-            <li class="menu">
-              <a href="#" class="menu">
-                <img alt="使用者圖示" src="/img/blank.jpg" width="20" height="20">
-                <span></span>
-              </a>
-              <ul class="menu-dropdown" style="display: none;">
-                <li><a href="#">Secondary link</a></li>
-                <li><a href="#" class="logout">登出</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
+{% block content %}
     <div class="container">
 
       <section id="object">
@@ -72,17 +13,4 @@
       </section>
 
     </div>
-
-    <div id="footer">
-      <div class="inner">
-        <div class="container">
-          <p>
-            Designed and built by <a href="http://twitter.com/ronhuang" target="_blank">@ronhuang</a>.<br />
-            Licensed under the <a href="https://github.com/ronhuang/adieu/blob/master/LICENSE" target="_blank">MIT License</a>.
-          </p>
-        </div>
-      </div>
-    </div>
-
-  </body>
-</html>
+{% endblock %}

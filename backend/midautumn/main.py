@@ -71,18 +71,18 @@ class ObjectHandler(BaseHandler):
             pagename = "object.html"
             args = mo.to_dict()
 
-            if self.current_user:
-                args.update({'profile_url': '/profile/%s' % self.current_user.id,
-                             'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
-                             'profile_name': self.current_user.name,
-                             'profile_id': self.current_user.id,
-                             })
-            else:
-                args.update({'profile_url': '#',
-                             'profile_picture': '/img/blank.jpg',
-                             'profile_name': '',
-                             'profile_id': '',
-                             })
+        if self.current_user:
+            args.update({'profile_url': '/profile/%s' % self.current_user.id,
+                         'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
+                         'profile_name': self.current_user.name,
+                         'profile_id': self.current_user.id,
+                         })
+        else:
+            args.update({'profile_url': '#',
+                         'profile_picture': '/img/blank.jpg',
+                         'profile_name': '',
+                         'profile_id': '',
+                         })
 
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', pagename)
