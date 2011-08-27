@@ -9,7 +9,7 @@ use_library('django', '1.2')
 
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.runtime import DeadlineExceededError
@@ -94,7 +94,6 @@ class ObjectsHandler(BaseHandler):
                     'cursor': query.cursor(),
                     'more': len(objects) >= 10,
                     }
-            args.update(self.current_user_profile)
         else:
             args = {'result': 'not_authorized'}
 
@@ -173,6 +172,47 @@ class CommentHandler(BaseHandler):
         self.response.out.write(json.dumps(args))
 
 
+class VisitHandler(BaseHandler):
+
+    def _handle_visit(self, user):
+        # maintain continuous visit
+        now = datetime.now()
+        count = user.continuous_visit_count
+        delta = now - user.continuous_visit_start
+        df = timedelta(count)
+        dt = timedelta(count + 1)
+        if delta >= df and delta < dt:
+            # advance count
+            user.continuous_visit_count = count + 1
+            user.put()
+        elif delta >= dt:
+            # continuous visit reset
+            user.continuous_visit_start = now
+            user.continuous_visit_count = 1
+            user.put()
+        else:
+            # still on the same day
+            pass
+
+    def post(self):
+        user = self.current_user
+
+        args = None
+
+        if not user:
+            args = {'result': 'not_authorized'}
+        else:
+            self._handle_visit(user)
+
+            achievements = achievement.check_continuous_visit(user)
+            args = {'result': 'success',
+                    'achievements': achievements
+                    }
+
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(args))
+
+
 def main():
     actions = [
         ('/api/object', ObjectHandler),
@@ -180,6 +220,7 @@ def main():
         ('/api/objects', ObjectsHandler),
         ('/api/edge', EdgeHandler),
         ('/api/comment', CommentHandler),
+        ('/api/visit', VisitHandler),
         ]
     application = webapp.WSGIApplication(actions, debug=True)
     util.run_wsgi_app(application)

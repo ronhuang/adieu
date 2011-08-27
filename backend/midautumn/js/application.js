@@ -52,6 +52,35 @@ $(document).ready(function(){
     document.getElementById('fb-root').appendChild(e);
   }());
 
+
+  // prompt achievements
+  var handleAchievements = function (achievements) {
+    for (var i in achievements) {
+      var achi = achievements[i];
+      var className = 'achievement' + Math.floor(Math.random() * 1000);
+
+      var html = '<div class="alert-message info ' + className + '">';
+      // TODO: add icon
+      html += '<p><strong>' + achi.title + '</strong></p>';
+      //html += '<a href="#" class="close">x</a>';
+      html += '<p>' + achi.description + '</p>';
+      html += '</div>';
+
+      $(html).appendTo($('#notification .placement'));
+      setTimeout("$('#notification ." + className + "').remove();", 10000);
+    }
+  };
+
+
+  // inform server about this visit
+  $.post('/api/visit', function (data, status) {
+    if (data.result == 'success') {
+      handleAchievements(data.achievements);
+    } else {
+    }
+  }, 'json');
+
+
   // object posted
   var objectPosted = function (data, status) {
     var field = $('#add input[name=title]');
@@ -61,6 +90,7 @@ $(document).ready(function(){
       var latest = $('#list .row:first');
       var latest_title = latest.find('.title').text()
 
+      // append retrieved objects
       for (var i in data.objects) {
         var obj = data.objects[i];
 
@@ -89,21 +119,8 @@ $(document).ready(function(){
         FB.XFBML.parse(cloned[0]);
       }
 
-      // show achievement
-      var html = '<div class="alert-message info achievement">';
-      html += '<p><strong>成就</strong></p>';
-      //html += '<a href="#" class="close">x</a>';
-      for (var i in data.achievements) {
-        var achi = data.achievements[i];
-
-        html += '<p>';
-        html += achi.description;
-        html += '</p>';
-      }
-      html += '</div>';
-
-      $(html).insertAfter($('#notification .placement'));
-      setTimeout("$('#notification .achievement').remove();", 10000);
+      // handle achievements
+      handleAchievements(data.achievements);
     } else {
       // show error message
     }

@@ -7,7 +7,7 @@
 
 import time
 from google.appengine.ext import db
-from datetime import datetime, timedelta, tzinfo
+from datetime import datetime, timedelta
 
 
 SIMPLE_TYPES = (int, long, float, bool, dict, basestring, list)
@@ -41,6 +41,8 @@ class MidautumnObject(db.Model):
 class UserAchievement(db.Model):
     owner = db.StringProperty(required=True)
     achievement_id = db.IntegerProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+    object_id = db.StringProperty()
 
 
 class FacebookUser(db.Model):
@@ -50,6 +52,8 @@ class FacebookUser(db.Model):
     name = db.StringProperty(required=True)
     profile_url = db.StringProperty(required=True)
     access_token = db.StringProperty(required=True)
+    continuous_visit_start = db.DateTimeProperty(auto_now_add=True)
+    continuous_visit_count = db.IntegerProperty(required=True, default=1)
 
 
 class FacebookEdge(db.Model):
