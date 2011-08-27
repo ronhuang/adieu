@@ -10,7 +10,7 @@ use_library('django', '1.2')
 
 import os
 import time
-from datetime import datetime, timedelta, tzinfo
+from datetime import datetime, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template

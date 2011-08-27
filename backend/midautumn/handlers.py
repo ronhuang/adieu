@@ -50,11 +50,13 @@ class BaseHandler(webapp.RequestHandler):
 
     @property
     def current_user_profile(self):
-        if self.current_user:
-            return {'profile_url': '/profile/%s' % self.current_user.id,
-                    'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.current_user.id,
-                    'profile_name': self.current_user.name,
-                    'profile_id': self.current_user.id,
+        user = self.current_user
+
+        if user:
+            return {'profile_url': '/profile/%s' % user.id,
+                    'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % user.id,
+                    'profile_name': user.name,
+                    'profile_id': user.id,
                     }
         else:
             return {'profile_url': '#',
