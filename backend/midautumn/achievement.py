@@ -24,7 +24,8 @@ TIME_OFFSET = 3000
 LIKE_COUNT_OFFSET = 4000
 COMMENT_COUNT_OFFSET = 5000
 CONTINUOUS_VISIT_OFFSET = 6000
-LAST_OFFSET = 7000
+MISC_OFFSET = 7000
+LAST_OFFSET = 8000
 
 ITEM_KEY = [u'玉米', u'臭豆腐', u'可樂', u'流星下的怨', u'星光戰士舞', u'Cloony 是大帥哥', ]
 ITEM_VALUE = {
@@ -87,6 +88,11 @@ CONTINUOUS_VISIT_VALUE = {
     365: (u'連續一年', u'你贏了！連續一年光臨。', 'continuous-visit-count-365.png'),
 }
 
+LIKE_REMOVED_ACHIEVEMENT_ID = MISC_OFFSET + 1
+LIKE_REMOVED_ACHIEVEMENT_VALUE = (u'太狠心了', u'太狠心了，竟然將讚取消！', 'like-removed.png')
+COMMENT_REMOVED_ACHIEVEMENT_ID = MISC_OFFSET + 2
+COMMENT_REMOVED_ACHIEVEMENT_VALUE = (u'刪除留言', u'刪除留言。@@', 'comment-removed.png')
+
 
 class UserAchievement(db.Model):
     owner = db.ReferenceProperty(FacebookUser, collection_name='achievement_set', required=True)
@@ -98,7 +104,11 @@ class UserAchievement(db.Model):
         aid = self.achievement_id
         title, description, icon = None, None, None
 
-        if aid >= LAST_OFFSET:
+        if aid == LIKE_REMOVED_ACHIEVEMENT_ID:
+            title, description, icon = LIKE_REMOVED_ACHIEVEMENT_VALUE
+        elif aid == COMMENT_REMOVED_ACHIEVEMENT_ID:
+            title, description, icon = COMMENT_REMOVED_ACHIEVEMENT_VALUE
+        elif aid >= LAST_OFFSET:
             pass
         elif aid >= CONTINUOUS_VISIT_OFFSET:
             key = aid - CONTINUOUS_VISIT_OFFSET
@@ -221,12 +231,102 @@ def check_post(obj):
     return achievements
 
 
-def check_like():
-    pass
+def _check_like_count(edge):
+    owner = edge.owner
+
+    query = owner.edge_set.filter('created =', True)
+    count = query.count()
+
+    if count not in LIKE_COUNT_VALUE:
+        return []
+
+    achievement_id = LIKE_COUNT_OFFSET + count
+
+    # check if already received achievement
+    query = owner.achievement_set.filter('achievement_id =', achievement_id)
+    if query.count() > 0:
+        return []
+
+    ua = UserAchievement(owner=owner, achievement_id=achievement_id)
+    key = ua.put()
+
+    title, description, icon = LIKE_COUNT_VALUE[count]
+    return [{'key': key.id(),
+             'title': title,
+             'description': description,
+             'icon_url': '/img/' + icon,
+             }]
+
+def _check_like_removed(edge):
+    owner = edge.owner
+
+    query = owner.edge_set.filter('removed =', True)
+
+    if query.count() <= 0:
+        return []
+
+    achievement_id = LIKE_REMOVED_ACHIEVEMENT_ID
+
+    # check if already received achievement
+    query = owner.achievement_set.filter('achievement_id =', achievement_id)
+    if query.count() > 0:
+        return []
+
+    ua = UserAchievement(owner=owner, achievement_id=achievement_id)
+    key = ua.put()
+
+    title, description, icon = LIKE_REMOVED_ACHIEVEMENT_VALUE
+    return [{'key': key.id(),
+             'title': title,
+             'description': description,
+             'icon_url': '/img/' + icon,
+             }]
+
+def check_like(edge):
+    achievements = []
+    achievements.extend(_check_like_count(edge))
+    achievements.extend(_check_like_removed(edge))
+    return achievements
 
 
-def check_comment():
-    pass
+def check_comment(comment=None, owner=None):
+    if not owner and comment:
+        owner = comment.owner
+
+    if not owner:
+        return []
+
+    achievement_id = None
+    title, description, icon = None, None, None
+
+    if not comment:
+        achievement_id = COMMENT_REMOVED_ACHIEVEMENT_ID
+    else:
+        count = owner.comment_set.count()
+
+        if count not in COMMENT_COUNT_VALUE:
+            return []
+
+        achievement_id = COMMENT_COUNT_OFFSET + count
+
+    # check if already received achievement
+    query = owner.achievement_set.filter('achievement_id =', achievement_id)
+    if query.count() > 0:
+        return []
+
+    ua = UserAchievement(owner=owner, achievement_id=achievement_id)
+    key = ua.put()
+
+    if not comment:
+        title, description, icon = COMMENT_REMOVED_ACHIEVEMENT_VALUE
+    else:
+        title, description, icon = COMMENT_COUNT_VALUE[count]
+
+    return [{'key': key.id(),
+             'title': title,
+             'description': description,
+             'icon_url': '/img/' + icon,
+             }]
 
 
 def check_continuous_visit(user):

@@ -159,7 +159,12 @@ class EdgeHandler(BaseHandler):
                 edge.removed = True
             edge.put()
 
-            args = {'result': 'success'}
+            achievements = []
+            achievements.extend(achievement.check_like(edge))
+
+            args = {'result': 'success',
+                    'achievements': achievements,
+                    }
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(args))
@@ -188,7 +193,7 @@ class CommentHandler(BaseHandler):
         else:
             query = user.comment_set
             query.filter('href =', href)
-            query.filter('commentID =', commentID)
+            query.filter('comment_id =', commentID)
             comment = query.get()
 
             if (action == 'create' and comment) or (action == 'remove' and not comment):
@@ -196,10 +201,22 @@ class CommentHandler(BaseHandler):
             elif action == 'create':
                 comment = FacebookComment(owner=user, href=href, comment_id=commentID, object=mo)
                 comment.put()
-                args = {'result': 'success'}
+
+                achievements = []
+                achievements.extend(achievement.check_comment(comment))
+
+                args = {'result': 'success',
+                        'achievements': achievements,
+                        }
             else:
                 comment.delete()
-                args = {'result': 'success'}
+
+                achievements = []
+                achievements.extend(achievement.check_comment(owner=user))
+
+                args = {'result': 'success',
+                        'achievements': achievements,
+                        }
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(args))

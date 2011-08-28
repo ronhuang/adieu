@@ -143,22 +143,42 @@ $(document).ready(function(){
 
   // The url that was liked is returned
   var edgeCreated = function (url) {
-    $.post('/api/edge', {url: url, action: 'create'});
+    $.post('/api/edge', {url: url, action: 'create'}, function (data, status) {
+      if (data.result == 'success') {
+        handleAchievements(data.achievements);
+      } else {
+      }
+    });
   };
 
   // The url that was unliked is returned
   var edgeRemoved = function (url) {
-    $.post('/api/edge', {url: url, action: 'remove'});
+    $.post('/api/edge', {url: url, action: 'remove'}, function (data, status) {
+      if (data.result == 'success') {
+        handleAchievements(data.achievements);
+      } else {
+      }
+    });
   };
 
   // {href: '', commentID: ''}
   var commentCreated = function (response) {
-    $.post('/api/comment', {href: response.href, commentID: response.commentID, action: 'create'});
+    $.post('/api/comment', {href: response.href, commentID: response.commentID, action: 'create'}, function (data, status) {
+      if (data.result == 'success') {
+        handleAchievements(data.achievements);
+      } else {
+      }
+    });
   };
 
   // {href: '', commentID: ''}
   var commentRemoved = function (response) {
-    $.post('/api/comment', {href: response.href, commentID: response.commentID, action: 'remove'});
+    $.post('/api/comment', {href: response.href, commentID: response.commentID, action: 'remove'}, function (data, status) {
+      if (data.result == 'success') {
+        handleAchievements(data.achievements);
+      } else {
+      }
+    });
   };
 
 
