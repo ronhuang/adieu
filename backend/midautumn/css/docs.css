@@ -71,3 +71,6 @@ div.more-empty {
   font-size: 150%;
   display: none;
 }
+#achievements img {
+  float: right;
+}

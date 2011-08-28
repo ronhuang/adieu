@@ -106,7 +106,7 @@ $(document).ready(function(){
         var fb_like = '<fb:like href="' + obj.absolute_url + '" send="false" ' +
           'layout="button_count" width="200" show_faces="false" ' +
           'action="like"></fb:like>';
-        $(fb_like).appendTo(cloned.find('.share'));
+        $(fb_like).appendTo(cloned.find('.like'));
 
         var fb_comment_count = '<fb:comments-count href="' + obj.absolute_url + '">0</fb:comments>';
         $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));
@@ -282,7 +282,7 @@ $(document).ready(function(){
           var fb_like = '<fb:like href="' + obj.absolute_url + '" send="false" ' +
             'layout="button_count" width="200" show_faces="false" ' +
             'action="like"></fb:like>';
-          $(fb_like).appendTo(cloned.find('.share'));
+          $(fb_like).appendTo(cloned.find('.like'));
 
           var fb_comment_count = '<fb:comments-count href="' + obj.absolute_url + '">0</fb:comments>';
           $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));

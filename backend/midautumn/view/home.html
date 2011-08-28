@@ -32,7 +32,7 @@
     <div class="container">
 
       <section id="list-template" style="display: none;">
-        <div class="row">
+        <div class="row well">
           <div class="span2 columns offset1">
             <img alt="推薦者圖示" src="img/blank.jpg" width="64" height="64">
           </div>
@@ -40,7 +40,8 @@
             <h2 class="title"></h2>
             <a class="timeago" href="#" title="2008-07-17T09:24:17Z"></a>
             <span class="timestamp" style="display: none;"></span>
-            <div class="share"></div>
+            <a class="delete" href="#" title="刪除這個東西">刪除</a>
+            <div class="like"></div>
             <div class="comment-container">
               <div class="banner">
                 <span class="button collapse"></span>
@@ -54,7 +55,7 @@
 
       <section id="list">
         {% for obj in objects %}
-        <div class="row">
+        <div class="row well">
           <div class="span2 columns offset1">
             <img alt="推薦者圖示" src="{{ obj.owner_picture }}" width="64" height="64">
           </div>
@@ -62,7 +63,8 @@
             <h2 class="title">{{ obj.title }}</h2>
             <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
             <span class="timestamp" style="display: none;">{{ obj.timestamp }}</span>
-            <div class="share">
+            <a class="delete" href="#" title="刪除這個東西">刪除</a>
+            <div class="like">
               <fb:like href="{{ obj.absolute_url }}" send="false" layout="button_count" width="200" show_faces="false" action="like"></fb:like>
             </div>
             <div class="comment-container">
@@ -81,7 +83,7 @@
       <span class="cursor" style="display: none;">{{ cursor }}</span>
 
       <div class="row" id="next-action">
-        <div class="span12 columns offset1">
+        <div class="span16 columns">
           <div class="more more-button" title="讀取更多...">更多</div>
           <div class="more more-throbber"></div>
           <div class="more more-empty">❦</div>
