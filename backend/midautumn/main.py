@@ -20,6 +20,7 @@ from midautumn.handlers import BaseHandler
 
 
 class HomeHandler(BaseHandler):
+
     def get(self):
         pagename = None
         args = None
@@ -32,7 +33,7 @@ class HomeHandler(BaseHandler):
             objects = []
             results = query.fetch(10)
             for obj in results:
-                objects.append(obj.to_dict())
+                objects.append(obj.to_dict(current_user=self.current_user))
 
             pagename = 'home.html'
             args = {'objects': objects,
@@ -50,6 +51,7 @@ class HomeHandler(BaseHandler):
 
 
 class ProfileHandler(BaseHandler):
+
     def get(self, key):
         args = {}
         pagename = None
@@ -102,6 +104,7 @@ class ProfileHandler(BaseHandler):
 
 
 class ObjectHandler(BaseHandler):
+
     def get(self, key):
         pagename = None
         args = None
@@ -122,6 +125,7 @@ class ObjectHandler(BaseHandler):
 
 
 class AchievementHandler(BaseHandler):
+
     def get(self, key):
         pagename = None
         args = None
@@ -142,6 +146,7 @@ class AchievementHandler(BaseHandler):
 
 
 class ChannelHandler(BaseHandler):
+
     def get(self):
         cache_expire = 60 * 60 * 24 * 365
         self.response.headers['Cache-Control'] = 'public, maxage=%d' % cache_expire

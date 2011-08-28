@@ -42,7 +42,7 @@ class MidautumnObject(db.Model):
         return MidautumnObject.get_by_id(int(key))
 
     # for serialization
-    def to_dict(self, details=False):
+    def to_dict(self, details=False, current_user=None):
         localtime = self.pubtime + timedelta(hours=8)
         fmt = None
         if localtime.hour < 12:
@@ -69,6 +69,10 @@ class MidautumnObject(db.Model):
 
             query = self.comment_set
             result['comment_count'] = query.count()
+
+        if current_user:
+            if current_user.id == self.owner.id:
+                result['modifiable'] = True
 
         return result
 

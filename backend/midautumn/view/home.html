@@ -66,7 +66,7 @@
             <span class="timestamp" style="display: none;">{{ obj.timestamp }}</span>
             <div class="action">
               <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
-              <a class="delete" href="#" title="刪除{{ obj.title }}">刪除</a>
+              <a class="delete {% if obj.modifiable %}modifiable{% endif %}" href="#" title="刪除{{ obj.title }}">刪除</a>
             </div>
             <div class="like">
               <fb:like href="{{ obj.absolute_url }}" send="false" layout="button_count" width="200" show_faces="false" action="like"></fb:like>

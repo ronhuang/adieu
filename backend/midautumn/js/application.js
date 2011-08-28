@@ -115,6 +115,7 @@ $(document).ready(function(){
 
         cloned.find('.title').text(obj.title);
         cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
+        cloned.find('.delete').attr('title', '刪除' + obj.title).addClass(obj.modifiable ? 'modifiable' : '');
         cloned.find('img:first').attr('src', obj.owner_picture);
         cloned.find('.timestamp').text(obj.timestamp);
 
@@ -295,7 +296,7 @@ $(document).ready(function(){
 
           cloned.find('.title').text(obj.title);
           cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
-          cloned.find('.delete').attr('title', '刪除' + obj.title)
+          cloned.find('.delete').attr('title', '刪除' + obj.title).addClass(obj.modifiable ? 'modifiable' : '');
           cloned.find('img:first').attr('src', obj.owner_picture);
           cloned.find('.timestamp').text(obj.timestamp);
 
@@ -326,8 +327,8 @@ $(document).ready(function(){
 
 
   // show delete on hover
-  $('#list .action').live('mouseover mouseout', function () {
-    var lbl = $(this).find('.delete');
+  $('#list .action').live('mouseover mouseout', function (event) {
+    var lbl = $(this).find('.delete.modifiable');
     if (event.type == "mouseover") {
       lbl.show();
     } else {

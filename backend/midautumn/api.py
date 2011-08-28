@@ -47,7 +47,7 @@ class ObjectHandler(BaseHandler):
 
             objects = []
             for obj in query:
-                objects.append(obj.to_dict())
+                objects.append(obj.to_dict(current_user=user))
 
             # check achievements
             achievements = []
@@ -61,22 +61,19 @@ class ObjectHandler(BaseHandler):
         self.response.out.write(json.dumps(args))
 
     def get(self, key):
-        user = self.current_user
-
         mo = MidautumnObject.get_by_id(int(key))
 
         args = None
 
-        if not user:
-            args = {'result': 'not_authorized'}
-        elif not mo:
+        if not mo:
             args = {'result': 'not_exist', 'key': key}
         else:
             args = {'result': 'success',
-                    'objects': [mo.to_dict(),]}
+                    'objects': [mo.to_dict(current_user=self.current_user),]}
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(args))
+
 
 class DeleteObjectHandler(BaseHandler):
 
@@ -108,25 +105,22 @@ class ObjectsHandler(BaseHandler):
 
         args = None
 
-        if self.current_user:
-            # load initial set of data
-            query = MidautumnObject.all()
-            query.order('-pubtime')
-            if cursor:
-                query.with_cursor(cursor)
+        # load initial set of data
+        query = MidautumnObject.all()
+        query.order('-pubtime')
+        if cursor:
+            query.with_cursor(cursor)
 
-            objects = []
-            results = query.fetch(10)
-            for obj in results:
-                objects.append(obj.to_dict())
+        objects = []
+        results = query.fetch(10)
+        for obj in results:
+            objects.append(obj.to_dict(current_user=self.current_user))
 
-            args = {'result': 'success',
-                    'objects': objects,
-                    'cursor': query.cursor(),
-                    'more': len(objects) >= 10,
-                    }
-        else:
-            args = {'result': 'not_authorized'}
+        args = {'result': 'success',
+                'objects': objects,
+                'cursor': query.cursor(),
+                'more': len(objects) >= 10,
+                }
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(args))
