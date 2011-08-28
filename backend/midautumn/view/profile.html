@@ -24,7 +24,7 @@
           <div class="span4 columns">
             <h4>{{ obj.title }}</h4>
             <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
-            <span>有 {{ obj.like_count }} 個讚和 {{ obj.comment_count }} 個註解。</span>
+            <span>有 {{ obj.like_count }} 個讚和 {{ obj.comment_count }} 個留言。</span>
           </div>
         {% if forloop.counter|divisibleby:4 %}
         </div>
@@ -68,7 +68,7 @@
         </div>
         <div class="row">
           <div class="span4 columns">
-            <h4>給了 {{ comment_count }} 個註解</h4>
+            <h4>給了 {{ comment_count }} 個留言</h4>
           </div>
         </div>
       </section>

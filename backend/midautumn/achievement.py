@@ -71,12 +71,12 @@ LIKE_COUNT_VALUE = {
 }
 
 COMMENT_COUNT_VALUE = {
-    1: (u'第一個註解', u'送出了第一個註解。', 'comment-count-1.png'),
-    5: (u'第五個註解', u'送出了第五個註解。', 'comment-count-5.png'),
-    10: (u'第十個註解', u'送出了第十個註解。', 'comment-count-10.png'),
-    50: (u'第五十個註解', u'太誇張了！送出了第五十個註解。', 'comment-count-50.png'),
-    100: (u'第一百個註解', u'你贏了！送出了第一百個註解。', 'comment-count-100.png'),
-    500: (u'第五百個註解', u'真有毅力！送出了第五百個註解。', 'comment-count-500.png'),
+    1: (u'第一個留言', u'送出了第一個留言。', 'comment-count-1.png'),
+    5: (u'第五個留言', u'送出了第五個留言。', 'comment-count-5.png'),
+    10: (u'第十個留言', u'送出了第十個留言。', 'comment-count-10.png'),
+    50: (u'第五十個留言', u'太誇張了！送出了第五十個留言。', 'comment-count-50.png'),
+    100: (u'第一百個留言', u'你贏了！送出了第一百個留言。', 'comment-count-100.png'),
+    500: (u'第五百個留言', u'真有毅力！送出了第五百個留言。', 'comment-count-500.png'),
 }
 
 CONTINUOUS_VISIT_KEY = [2, 7, 30, 365]
