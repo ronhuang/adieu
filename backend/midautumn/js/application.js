@@ -249,7 +249,7 @@ $(document).ready(function(){
       if (comment.find('fb\\:comments').length == 0) {
         // create new fb:comments
         url = $(this).find('fb\\:comments-count').attr('href');
-        $('<fb:comments href="' + url + '" num_posts="2" width="400"></fb:comments>').appendTo(comment);
+        $('<fb:comments href="' + url + '" num_posts="2" width="580"></fb:comments>').appendTo(comment);
         FB.XFBML.parse(comment[0]);
       }
 

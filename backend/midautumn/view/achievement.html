@@ -1,0 +1,31 @@
+{% extends "base-menu.html" %}
+
+{% block title %}{{ title }} - 中秋烤肉{% endblock %}
+{% block description %}{{ description }}{% endblock %}
+{% block og-title %}{{ title }}{% endblock %}
+{% block og-description %}{{ description }}{% endblock %}
+{% block og-type %}activity{% endblock %}
+{% block og-url %}{{ absolute_url }}{% endblock %}
+{% block og-image %}{{ icon }}{% endblock %}
+
+{% block body-class %}achievement{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+      <section id="achievement">
+        <div class="row">
+          <div class="span2 columns offset1">
+            <img alt="成就圖示" src="{{ icon }}" width="64" height="64">
+          </div>
+          <div class="span10 columns">
+            <h2 class="title">{{ title }}</h2>
+            <p>{{ description }}</p>
+            <abbr class="timeago" title="{{ created_iso8601 }}">{{ created_local }}</abbr>達成。
+            <fb:comments num_posts="5" width="580"></fb:comments>
+          </div>
+        </div>
+      </section>
+
+    </div>
+{% endblock %}

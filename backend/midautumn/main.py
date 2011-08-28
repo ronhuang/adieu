@@ -15,8 +15,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 from midautumn.models import MidautumnObject, FacebookUser
+from midautumn.achievement import UserAchievement
 from midautumn.handlers import BaseHandler
-import midautumn.achievement as achievement
 
 
 class HomeHandler(BaseHandler):
@@ -50,12 +50,12 @@ class HomeHandler(BaseHandler):
 
 
 class ProfileHandler(BaseHandler):
-    def get(self, profile_id):
+    def get(self, key):
         args = {}
         pagename = None
 
         # check if requested profile exist
-        profile = FacebookUser.get_by_key_name(profile_id)
+        profile = FacebookUser.get_by_key_name(key)
         if profile:
             # objects from requested profile
             query = profile.object_set
@@ -102,17 +102,37 @@ class ProfileHandler(BaseHandler):
 
 
 class ObjectHandler(BaseHandler):
-    def get(self, object_id):
+    def get(self, key):
         pagename = None
         args = None
 
-        mo = MidautumnObject.get_by_id(int(object_id))
+        mo = MidautumnObject.get_by_id(int(key))
         if mo == None:
             pagename = "object_not_found.html"
             args = {}
         else:
             pagename = "object.html"
             args = mo.to_dict()
+
+        args.update(self.current_user_profile)
+
+        dirname = os.path.dirname(__file__)
+        path = os.path.join(dirname, 'view', pagename)
+        self.response.out.write(template.render(path, args))
+
+
+class AchievementHandler(BaseHandler):
+    def get(self, key):
+        pagename = None
+        args = None
+
+        ua = UserAchievement.get_by_id(int(key))
+        if ua == None:
+            pagename = "achievement_not_found.html"
+            args = {}
+        else:
+            pagename = "achievement.html"
+            args = ua.to_dict()
 
         args.update(self.current_user_profile)
 
@@ -137,6 +157,7 @@ def main():
         ('/', HomeHandler),
         ('/profile/([0-9]+)$', ProfileHandler),
         ('/object/([0-9]+)$', ObjectHandler),
+        ('/achievement/([0-9]+)$', AchievementHandler),
         ('/channel', ChannelHandler),
         ]
     application = webapp.WSGIApplication(actions, debug=True)

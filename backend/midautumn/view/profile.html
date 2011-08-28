@@ -14,60 +14,72 @@
     <div class="container">
 
       <section id="recommendations">
-        <div class="page-header">
-          <h1>推薦的東西<small>按照推薦時間排序</small></h1>
+        <div class="row">
+          <div class="span14 columns offset1">
+            <div class="page-header">
+              <h1>推薦的東西<small>按照推薦時間排序</small></h1>
+            </div>
+          </div>
         </div>
         {% for obj in objects %}
-        {% if forloop.counter0|divisibleby:4 %}
+        {% if forloop.counter0|divisibleby:3 %}
         <div class="row">
         {% endif %}
-          <div class="span4 columns">
+          <div class="span4 columns offset1">
             <h4>{{ obj.title }}</h4>
             <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
-            <span>有 {{ obj.like_count }} 個讚和 {{ obj.comment_count }} 個留言。</span>
+            <div>有 {{ obj.like_count }} 個讚和 {{ obj.comment_count }} 個留言。</div>
           </div>
-        {% if forloop.counter|divisibleby:4 %}
+        {% if forloop.counter|divisibleby:3 %}
         </div>
         {% endif %}
         {% endfor %}
       </section>
 
       <section id="achievements">
-        <div class="page-header">
-          <h1>成就<small>按照得到成就的時間排序</small></h1>
+        <div class="row">
+          <div class="span14 columns offset1">
+            <div class="page-header">
+              <h1>成就<small>按照得到成就的時間排序</small></h1>
+            </div>
+          </div>
         </div>
         {% for achi in achievements %}
-        {% if forloop.counter0|divisibleby:4 %}
+        {% if forloop.counter0|divisibleby:3 %}
         <div class="row">
         {% endif %}
-          <div class="span4 columns">
+          <div class="span4 columns offset1">
             <h4>{{ achi.title }}</h4>
             <!-- icon -->
-            <a class="timeago" href="{{ achi.url }}" title="{{ achi.created_iso8601 }}">{{ achi.created_local }}</a>
+            <a class="timeago" href="{{ achi.relative_url }}" title="{{ achi.created_iso8601 }}">{{ achi.created_local }}</a>
           </div>
-        {% if forloop.counter|divisibleby:4 %}
+        {% if forloop.counter|divisibleby:3 %}
         </div>
         {% endif %}
         {% endfor %}
       </section>
 
       <section id="others">
-        <div class="page-header">
-          <h1>其他<small>不重要的統計</small></h1>
+        <div class="row">
+          <div class="span14 columns offset1">
+            <div class="page-header">
+              <h1>其他<small>不重要的統計</small></h1>
+            </div>
+          </div>
         </div>
         <div class="row">
-          <div class="span4 columns">
+          <div class="span4 columns offset1">
             <h4>讚了 {{ liked_count }} 個東西</h4>
           </div>
-          <div class="span4 columns">
+          <div class="span4 columns offset1">
             <h4>給過 {{ liked_created_count }} 個讚</h4>
           </div>
-          <div class="span4 columns">
+          <div class="span4 columns offset1">
             <h4>取消過 {{ liked_removed_count }} 個讚</h4>
           </div>
         </div>
         <div class="row">
-          <div class="span4 columns">
+          <div class="span4 columns offset1">
             <h4>給了 {{ comment_count }} 個留言</h4>
           </div>
         </div>

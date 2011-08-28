@@ -133,7 +133,9 @@ class UserAchievement(db.Model):
             pass
 
         if title and description and icon:
-            return {'title': title, 'description': description, 'icon': icon}
+            return {'title': title,
+                    'description': description,
+                    'icon': 'http://midautumn.ronhuang.org/img/' + icon}
         else:
             return {}
 
@@ -147,9 +149,11 @@ class UserAchievement(db.Model):
         else:
             fmt = "%Y年%m月%d號 下午%I:%M:%S"
 
+        relative_url = '/achievement/%s' % self.key().id()
         result = {'created_iso8601': self.created.strftime('%Y-%m-%dT%H:%M:%SZ'),
                   'created_local': localtime.strftime(fmt),
-                  'url': '/achievement/%s' % self.key().id(),
+                  'relative_url': relative_url,
+                  'absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
                   }
 
         # update result with actual achievement info
