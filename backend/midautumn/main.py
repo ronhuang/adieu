@@ -16,6 +16,7 @@ from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 from midautumn.models import MidautumnObject, FacebookUser
 from midautumn.handlers import BaseHandler
+import midautumn.achievement as achievement
 
 
 class HomeHandler(BaseHandler):
@@ -61,7 +62,7 @@ class ProfileHandler(BaseHandler):
             query.order('pubtime')
             objects = []
             for obj in query:
-                objects.append(obj.to_dict())
+                objects.append(obj.to_dict(details=True))
             args['objects'] = objects
 
             # achievements from requested profile

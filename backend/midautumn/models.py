@@ -6,6 +6,7 @@
 
 
 import time
+import re
 from google.appengine.ext import db
 from datetime import timedelta
 
@@ -29,8 +30,19 @@ class MidautumnObject(db.Model):
     owner = db.ReferenceProperty(FacebookUser, collection_name='object_set', required=True)
     pubtime = db.DateTimeProperty(required=True, auto_now_add=True)
 
+    @staticmethod
+    def get_by_url(url):
+        if not url:
+            return
+        # url is expect to be http://example.com/object/<key>
+        matches = re.search(r'/object/(?P<key>[0-9]+)', url)
+        if not matches:
+            return
+        key = matches.group('key')
+        return MidautumnObject.get_by_id(int(key))
+
     # for serialization
-    def to_dict(self):
+    def to_dict(self, details=False):
         localtime = self.pubtime + timedelta(hours=8)
         fmt = None
         if localtime.hour < 12:
@@ -41,18 +53,29 @@ class MidautumnObject(db.Model):
         uid = self.owner.id
         relative_url = '/object/%s' % self.key().id()
 
-        return {'owner_picture': 'http://graph.facebook.com/%s/picture?type=square' % uid,
-                'title': self.title,
-                'pubtime_iso8601': self.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'pubtime_local': localtime.strftime(fmt),
-                'timestamp': int(time.mktime(self.pubtime.timetuple())),
-                'relative_url': relative_url,
-                'absolute_url': 'http://midautumn.ronhuang.org/%s' % relative_url,
-                }
+        result = {'owner_picture': 'http://graph.facebook.com/%s/picture?type=square' % uid,
+                  'title': self.title,
+                  'pubtime_iso8601': self.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                  'pubtime_local': localtime.strftime(fmt),
+                  'timestamp': int(time.mktime(self.pubtime.timetuple())),
+                  'relative_url': relative_url,
+                  'absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
+                  }
+
+        if details:
+            query = self.edge_set
+            query.filter('connected =', True)
+            result['like_count'] = query.count()
+
+            query = self.comment_set
+            result['comment_count'] = query.count()
+
+        return result
 
 
 class FacebookEdge(db.Model):
     owner = db.ReferenceProperty(FacebookUser, collection_name='edge_set', required=True)
+    object = db.ReferenceProperty(MidautumnObject, collection_name='edge_set', required=True)
     url = db.StringProperty(required=True)
     connected = db.BooleanProperty()
     created = db.BooleanProperty()
@@ -61,5 +84,6 @@ class FacebookEdge(db.Model):
 
 class FacebookComment(db.Model):
     owner = db.ReferenceProperty(FacebookUser, collection_name='comment_set', required=True)
+    object = db.ReferenceProperty(MidautumnObject, collection_name='comment_set', required=True)
     href = db.StringProperty(required=True)
     comment_id = db.StringProperty(required=True)

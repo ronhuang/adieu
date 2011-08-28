@@ -116,6 +116,7 @@ class EdgeHandler(BaseHandler):
         url = self.request.get('url', None)
 
         user = self.current_user
+        mo = MidautumnObject.get_by_url(url)
 
         args = None
 
@@ -125,12 +126,14 @@ class EdgeHandler(BaseHandler):
             args = {'result': 'unknown_action'}
         elif not url:
             args = {'result': 'missing_parameter'}
+        elif not mo:
+            args = {'result': 'invalid_parameter'}
         else:
             query = user.edge_set
             query.filter('url =', url)
             edge = query.get()
             if not edge:
-                edge = FacebookEdge(owner=user, url=url)
+                edge = FacebookEdge(owner=user, url=url, object=mo)
             if action == 'create':
                 edge.connected = True
                 edge.created = True
@@ -153,6 +156,7 @@ class CommentHandler(BaseHandler):
         commentID = self.request.get('commentID', None)
 
         user = self.current_user
+        mo = MidautumnObject.get_by_url(href)
 
         args = None
 
@@ -162,6 +166,8 @@ class CommentHandler(BaseHandler):
             args = {'result': 'unknown_action'}
         elif not href or not commentID:
             args = {'result': 'missing_parameter'}
+        elif not mo:
+            args = {'result': 'invalid_parameter'}
         else:
             query = user.comment_set
             query.filter('href =', href)
@@ -171,7 +177,7 @@ class CommentHandler(BaseHandler):
             if (action == 'create' and comment) or (action == 'remove' and not comment):
                 args = {'result': 'invalid_state'}
             elif action == 'create':
-                comment = FacebookComment(owner=user, href=href, comment_id=commentID)
+                comment = FacebookComment(owner=user, href=href, comment_id=commentID, object=mo)
                 comment.put()
                 args = {'result': 'success'}
             else:
