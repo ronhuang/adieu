@@ -293,7 +293,7 @@ def get_signed_fb_request(cookies, app_id, app_secret):
             if re.match("^(.*?)\-(.*?)$", session_key):
                 cookie_response["expires"] = "0"
             else:
-               cookie_response["expires"] = "1"
+                cookie_response["expires"] = "1"
             cookie_response['fbsr_signed'] = True   # for debugging purposes
             cookie_response['uid'] = data['user_id']
             cookie_response['access_token'] = response
