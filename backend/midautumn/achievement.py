@@ -55,10 +55,10 @@ TIME_VALUE = {
     date(2012, 9, 13): (u'中秋節 2012', u'中秋節快樂。', 'midautumn2012.png'),
     date(2011, 12, 25): (u'聖誕節 2011', u'聖誕節快樂。', 'christmas2011.png'),
     date(2012, 12, 25): (u'聖誕節 2012', u'聖誕節快樂。', 'christmas2012.png'),
-    date(2012, 1, 1): (u'新年 2011', u'新年快樂。', 'newyear2012.png'),
-    date(2013, 1, 1): (u'新年 2011', u'新年快樂。', 'newyear2013.png'),
-    date(2012, 1, 23): (u'農曆新年 2011', u'農曆新年快樂。', 'lunarnewyear2012.png'),
-    date(2013, 2, 10): (u'農曆新年 2011', u'農曆新年快樂。', 'lunarnewyear2013.png'),
+    date(2012, 1, 1): (u'新年 2012', u'新年快樂。', 'newyear2012.png'),
+    date(2013, 1, 1): (u'新年 2013', u'新年快樂。', 'newyear2013.png'),
+    date(2012, 1, 23): (u'農曆新年 2012', u'農曆新年快樂。', 'lunarnewyear2012.png'),
+    date(2013, 2, 10): (u'農曆新年 2013', u'農曆新年快樂。', 'lunarnewyear2013.png'),
     }
 
 LIKE_COUNT_VALUE = {
