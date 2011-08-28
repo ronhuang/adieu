@@ -69,7 +69,7 @@ class ObjectHandler(BaseHandler):
 
         if not user:
             args = {'result': 'not_authorized'}
-        if not mo:
+        elif not mo:
             args = {'result': 'not_exist', 'key': key}
         else:
             args = {'result': 'success',
@@ -77,6 +77,29 @@ class ObjectHandler(BaseHandler):
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(args))
+
+class DeleteObjectHandler(BaseHandler):
+
+    def post(self, key):
+        user = self.current_user
+
+        mo = MidautumnObject.get_by_id(int(key))
+
+        args = None
+
+        if not user:
+            args = {'result': 'not_authorized'}
+        elif not mo:
+            args = {'result': 'not_exist', 'key': key}
+        elif mo.owner != user:
+            args = {'result': 'not_authorized'}
+        else:
+            mo.delete()
+            args = {'result': 'success', 'key': key}
+
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(args))
+
 
 class ObjectsHandler(BaseHandler):
 
@@ -233,6 +256,7 @@ def main():
     actions = [
         ('/api/object', ObjectHandler),
         ('/api/object/([0-9]+)$', ObjectHandler),
+        ('/api/object/([0-9]+)/delete', DeleteObjectHandler),
         ('/api/objects', ObjectsHandler),
         ('/api/edge', EdgeHandler),
         ('/api/comment', CommentHandler),

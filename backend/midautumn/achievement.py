@@ -133,9 +133,12 @@ class UserAchievement(db.Model):
             pass
 
         if title and description and icon:
+            relative_url = '/img/' + icon
             return {'title': title,
                     'description': description,
-                    'icon': 'http://midautumn.ronhuang.org/img/' + icon}
+                    'icon_url': relative_url,
+                    'icon_absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
+                    }
         else:
             return {}
 
@@ -180,7 +183,11 @@ def _check_item(obj):
     key = ua.put()
 
     description, icon = ITEM_VALUE[title]
-    return [{'key': key.id(), 'title': title, 'description': description, 'icon': icon}]
+    return [{'key': key.id(),
+             'title': title,
+             'description': description,
+             'icon_url': '/img/' + icon,
+             }]
 
 def _check_item_count(obj):
     owner = obj.owner
@@ -201,7 +208,11 @@ def _check_item_count(obj):
     key = ua.put()
 
     title, description, icon = ITEM_COUNT_VALUE[count]
-    return [{'key': key.id(), 'title': title, 'description': description, 'icon': icon}]
+    return [{'key': key.id(),
+             'title': title,
+             'description': description,
+             'icon_url': '/img/' + icon,
+             }]
 
 def check_post(obj):
     achievements = []
@@ -234,4 +245,8 @@ def check_continuous_visit(user):
     key = ua.put()
 
     title, description, icon = CONTINUOUS_VISIT_VALUE[count]
-    return [{'key': key.id(), 'title': title, 'description': description, 'icon': icon}]
+    return [{'key': key.id(),
+             'title': title,
+             'description': description,
+             'icon_url': '/img/' + icon,
+             }]

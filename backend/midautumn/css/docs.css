@@ -19,6 +19,12 @@ a.menu img {
 }
 #notification {
 }
+#notification .placement .alert-message {
+  min-height: 64px;
+}
+#notification .placement .alert-message img {
+  float: right;
+}
 #list .row {
   padding: 20px 0px;
   margin: 5px 0px;
@@ -27,9 +33,9 @@ a.menu img {
   vertical-align: top;
 }
 #list .share {
-  background-color: #FBFBFB;
-  border-bottom: 1px solid #E3E3E3;
-  padding: 8px;
+}
+#list .delete {
+  display: none;
 }
 #list .comment-container .banner {
   background-color: #FBFBFB;
@@ -73,4 +79,7 @@ div.more-empty {
 }
 #achievements img {
   float: right;
+}
+#confirmation {
+  top: 100%;
 }

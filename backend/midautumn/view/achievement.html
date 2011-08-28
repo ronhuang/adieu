@@ -6,7 +6,7 @@
 {% block og-description %}{{ description }}{% endblock %}
 {% block og-type %}activity{% endblock %}
 {% block og-url %}{{ absolute_url }}{% endblock %}
-{% block og-image %}{{ icon }}{% endblock %}
+{% block og-image %}{{ icon_absolute_url }}{% endblock %}
 
 {% block body-class %}achievement{% endblock %}
 
@@ -16,7 +16,7 @@
       <section id="achievement">
         <div class="row well">
           <div class="span2 columns offset1">
-            <img alt="成就圖示" src="{{ icon }}" width="64" height="64">
+            <img alt="成就圖示" src="{{ icon_url }}" width="64" height="64">
           </div>
           <div class="span10 columns">
             <h2 class="title">{{ title }}</h2>

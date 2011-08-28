@@ -59,15 +59,17 @@ $(document).ready(function(){
       var achi = achievements[i];
       var className = 'achievement' + Math.floor(Math.random() * 1000);
 
-      var html = '<div class="alert-message info ' + className + '">';
-      // TODO: add icon
+      var html = '<div class="alert-message info ' + className + '" style="display: none;">';
+      html += '<img alt="成就圖示" src="' + achi.icon_url + '" width="64" height="64">';
       html += '<p><strong>' + achi.title + '</strong></p>';
       //html += '<a href="#" class="close">x</a>';
       html += '<p>' + achi.description + '</p>';
       html += '</div>';
 
-      $(html).appendTo($('#notification .placement'));
-      setTimeout("$('#notification ." + className + "').remove();", 10000);
+      var dlg = $(html);
+      dlg.appendTo($('#notification .placement'));
+      dlg.fadeIn('fast');
+      setTimeout("$('#notification ." + className + "').fadeOut('fast');", 10000);
     }
   };
 
@@ -118,6 +120,8 @@ $(document).ready(function(){
 
         cloned.prependTo(container);
         FB.XFBML.parse(cloned[0]);
+
+        cloned.fadeIn('slow');
       }
 
       // handle achievements
@@ -192,6 +196,8 @@ $(document).ready(function(){
 
   // logout
   $("a.logout").click(function (e) {
+    e.preventDefault();
+
     FB.logout(function (response) {
       document.location.reload(true);
     });
@@ -289,11 +295,14 @@ $(document).ready(function(){
 
           cloned.find('.title').text(obj.title);
           cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
+          cloned.find('.delete').attr('title', '刪除' + obj.title)
           cloned.find('img:first').attr('src', obj.owner_picture);
           cloned.find('.timestamp').text(obj.timestamp);
 
           cloned.appendTo(container);
           FB.XFBML.parse(cloned[0]);
+
+          cloned.fadeIn('slow');
         }
 
         // update cursor
@@ -313,6 +322,56 @@ $(document).ready(function(){
       throbber.hide();
     }, 'json');
 
+  });
+
+
+  // show delete on hover
+  $('#list .action').live('mouseover mouseout', function () {
+    var lbl = $(this).find('.delete');
+    if (event.type == "mouseover") {
+      lbl.show();
+    } else {
+      lbl.hide();
+    }
+  });
+
+  // delete
+  $('#list .delete').live('click', function (e) {
+    e.preventDefault();
+
+    var dlg = $('div.modal');
+    var parents = $(this).parentsUntil('#list');
+    var row = parents.slice(-1);
+    var title = row.find('.title').text();
+    var url = row.find('a.timeago').attr('href');
+    var btnp = dlg.find('.modal-footer .primary');
+    var btns = dlg.find('.modal-footer .secondary');
+
+    // config dialog
+    dlg.find('.modal-header h3').text('確定刪除？');
+    dlg.find('.modal-body p').text('確定刪除' + title + '嗎？');
+    btnp.text('刪除');
+    btns.text('取消');
+
+    // handle events
+    btnp.unbind();
+    btnp.click(function () {
+      $.post('/api' + url + '/delete', function (data, status) {
+        if (data.result == 'success') {
+          // fade the deleted object.
+          row.fadeOut('slow');
+        }
+        dlg.fadeOut('fast');
+      });
+    });
+
+    btns.unbind();
+    btns.click(function () {
+      dlg.fadeOut('fast');
+    });
+
+    // show dialog
+    dlg.fadeIn('fast');
   });
 
 });

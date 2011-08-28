@@ -5,7 +5,7 @@
 {% block content %}
     <div class="container" id="add">
       <div class="row">
-        <div class="span9 columns offset1">
+        <div class="span16 columns">
           <form action="/api/object" class="form-stacked" method="post">
             <fieldset>
               <legend>想吃什麼？</legend>
@@ -24,7 +24,7 @@
 
     <div class="container" id="notification">
       <div class="row">
-        <div class="span9 columns offset1 placement">
+        <div class="span10 columns offset3 placement">
         </div>
       </div>
     </div>
@@ -32,15 +32,17 @@
     <div class="container">
 
       <section id="list-template" style="display: none;">
-        <div class="row well">
+        <div class="row well" style="display: none;">
           <div class="span2 columns offset1">
             <img alt="推薦者圖示" src="img/blank.jpg" width="64" height="64">
           </div>
           <div class="span10 columns">
             <h2 class="title"></h2>
-            <a class="timeago" href="#" title="2008-07-17T09:24:17Z"></a>
             <span class="timestamp" style="display: none;"></span>
-            <a class="delete" href="#" title="刪除這個東西">刪除</a>
+            <div class="action">
+              <a class="timeago" href="#" title="2008-07-17T09:24:17Z"></a>
+              <a class="delete" href="#" title="刪除XXX">刪除</a>
+            </div>
             <div class="like"></div>
             <div class="comment-container">
               <div class="banner">
@@ -61,9 +63,11 @@
           </div>
           <div class="span10 columns">
             <h2 class="title">{{ obj.title }}</h2>
-            <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
             <span class="timestamp" style="display: none;">{{ obj.timestamp }}</span>
-            <a class="delete" href="#" title="刪除這個東西">刪除</a>
+            <div class="action">
+              <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
+              <a class="delete" href="#" title="刪除{{ obj.title }}">刪除</a>
+            </div>
             <div class="like">
               <fb:like href="{{ obj.absolute_url }}" send="false" layout="button_count" width="200" show_faces="false" action="like"></fb:like>
             </div>

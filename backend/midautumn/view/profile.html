@@ -45,7 +45,7 @@
         <div class="row">
         {% endif %}
           <div class="span4 columns well">
-            <img alt="成就圖示" src="{{ achi.icon }}" width="64" height="64">
+            <img alt="成就圖示" src="{{ achi.icon_url }}" width="64" height="64">
             <h4>{{ achi.title }}</h4>
             <a class="timeago" href="{{ achi.relative_url }}" title="{{ achi.created_iso8601 }}">{{ achi.created_local }}</a>
           </div>
