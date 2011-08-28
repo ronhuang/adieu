@@ -87,15 +87,16 @@ $(document).ready(function(){
     var button = $('#add button[type=submit]')
 
     if (data.result == 'success') {
-      var latest = $('#list .row:first');
-      var latest_title = latest.find('.title').text()
+      var container = $('#list');
+
+      var latest_title = container.find('.row:first').text()
 
       // append retrieved objects
-      for (var i in data.objects) {
+      for (var i = data.objects.length - 1; i >= 0; i--) {
         var obj = data.objects[i];
 
         if (latest_title == obj.title) {
-          // should only happen at the very last obj,
+          // should only happen at the old obj,
           // due to the poor resolution of timestamp
           continue;
         }
@@ -115,7 +116,7 @@ $(document).ready(function(){
         cloned.find('img:first').attr('src', obj.owner_picture);
         cloned.find('.timestamp').text(obj.timestamp);
 
-        cloned.insertBefore(latest);
+        cloned.prependTo(container);
         FB.XFBML.parse(cloned[0]);
       }
 
