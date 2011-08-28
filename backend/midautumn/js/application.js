@@ -83,6 +83,30 @@ $(document).ready(function(){
   }, 'json');
 
 
+  // new object row
+  var newObjectRow = function (obj) {
+    var cloned = $('#list-template .row').clone();
+
+    var fb_like = '<fb:like href="' + obj.absolute_url + '" send="false" ' +
+      'layout="button_count" width="200" show_faces="false" ' +
+      'action="like"></fb:like>';
+    $(fb_like).appendTo(cloned.find('.like'));
+
+    var fb_comment_count = '<fb:comments-count href="' + obj.absolute_url + '">0</fb:comments>';
+    $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));
+
+    cloned.find('.title').text(obj.title);
+    cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
+    cloned.find('.delete').attr('title', '刪除' + obj.title).addClass(obj.modifiable ? 'modifiable' : '');
+    cloned.find('img:first').attr('src', obj.owner_picture);
+    cloned.find('.timestamp').text(obj.timestamp);
+
+    FB.XFBML.parse(cloned[0]);
+
+    return cloned;
+  };
+
+
   // object posted
   var objectPosted = function (data, status) {
     var field = $('#add input[name=title]');
@@ -103,26 +127,8 @@ $(document).ready(function(){
           continue;
         }
 
-        var cloned = $('#list-template .row').clone();
-
-        var fb_like = '<fb:like href="' + obj.absolute_url + '" send="false" ' +
-          'layout="button_count" width="200" show_faces="false" ' +
-          'action="like"></fb:like>';
-        $(fb_like).appendTo(cloned.find('.like'));
-
-        var fb_comment_count = '<fb:comments-count href="' + obj.absolute_url + '">0</fb:comments>';
-        $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));
-
-        cloned.find('.title').text(obj.title);
-        cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
-        cloned.find('.delete').attr('title', '刪除' + obj.title).addClass(obj.modifiable ? 'modifiable' : '');
-        cloned.find('img:first').attr('src', obj.owner_picture);
-        cloned.find('.timestamp').text(obj.timestamp);
-
-        cloned.prependTo(container);
-        FB.XFBML.parse(cloned[0]);
-
-        cloned.fadeIn('slow');
+        var cloned = newObjectRow(obj);
+        cloned.prependTo(container).fadeIn('slow');
       }
 
       // handle achievements
@@ -284,26 +290,8 @@ $(document).ready(function(){
 
         for (var i in data.objects) {
           var obj = data.objects[i];
-          var cloned = $('#list-template .row').clone();
-
-          var fb_like = '<fb:like href="' + obj.absolute_url + '" send="false" ' +
-            'layout="button_count" width="200" show_faces="false" ' +
-            'action="like"></fb:like>';
-          $(fb_like).appendTo(cloned.find('.like'));
-
-          var fb_comment_count = '<fb:comments-count href="' + obj.absolute_url + '">0</fb:comments>';
-          $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));
-
-          cloned.find('.title').text(obj.title);
-          cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
-          cloned.find('.delete').attr('title', '刪除' + obj.title).addClass(obj.modifiable ? 'modifiable' : '');
-          cloned.find('img:first').attr('src', obj.owner_picture);
-          cloned.find('.timestamp').text(obj.timestamp);
-
-          cloned.appendTo(container);
-          FB.XFBML.parse(cloned[0]);
-
-          cloned.fadeIn('slow');
+          var cloned = newObjectRow(obj);
+          cloned.prependTo(container).fadeIn('slow');
         }
 
         // update cursor
