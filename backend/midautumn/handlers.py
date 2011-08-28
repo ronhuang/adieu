@@ -53,13 +53,16 @@ class BaseHandler(webapp.RequestHandler):
         user = self.current_user
 
         if user:
-            return {'profile_url': '/profile/%s' % user.id,
+            relative_url = '/profile/%s' % user.id
+            return {'profile_url': relative_url,
+                    'profile_absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
                     'profile_picture': 'http://graph.facebook.com/%s/picture?type=square' % user.id,
                     'profile_name': user.name,
                     'profile_id': user.id,
                     }
         else:
             return {'profile_url': '#',
+                    'profile_absolute_url': '#',
                     'profile_picture': '/img/blank.jpg',
                     'profile_name': '',
                     'profile_id': '',

@@ -1,5 +1,13 @@
 {% extends "base-menu.html" %}
 
+{% block title %}{{ profile_name }} - 中秋烤肉{% endblock %}
+{% block description %}{{ profile_name }}在中秋烤肉上的資料。{% endblock %}
+{% block og-title %}{{ profile_name }} - 中秋烤肉{% endblock %}
+{% block og-description %}{{ profile_name }}在中秋烤肉上的資料。{% endblock %}
+{% block og-type %}profile{% endblock %}
+{% block og-url %}{{ profile_absolute_url }}{% endblock %}
+{% block og-image %}{{ profile_picture }}{% endblock %}
+
 {% block body-class %}profile{% endblock %}
 
 {% block content %}

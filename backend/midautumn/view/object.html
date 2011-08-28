@@ -1,5 +1,13 @@
 {% extends "base-menu.html" %}
 
+{% block title %}{{ title }} - 中秋烤肉{% endblock %}
+{% block description %}{{ title }}在中秋烤肉上的資料。{% endblock %}
+{% block og-title %}{{ title }} - 中秋烤肉{% endblock %}
+{% block og-description %}{{ title }}在中秋烤肉上的資料。{% endblock %}
+{% block og-type %}product{% endblock %}
+{% block og-url %}{{ absolute_url }}{% endblock %}
+{% block og-image %}{{ owner_picture }}{% endblock %}
+
 {% block body-class %}object{% endblock %}
 
 {% block content %}
