@@ -12,7 +12,7 @@ $(document).ready(function(){
       status: true,
       cookie: true,
       xfbml: true,
-      channelUrl: 'http://midautumn.ronhuang.org/channel',
+      channelUrl: document.location.protocol + '//' + document.location.host + '/channel',
       oauth: true
     });
 

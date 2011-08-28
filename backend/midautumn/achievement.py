@@ -10,22 +10,21 @@ use_library('django', '1.2')
 
 import os
 import logging
-from datetime import date
+import time
+from datetime import date, timedelta
 from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext import db
 from django.utils import simplejson as json
-from midautumn.models import MidautumnObject, UserAchievement
+from midautumn.models import FacebookUser
 
 
 ITEM_OFFSET = 1000
 ITEM_COUNT_OFFSET = 2000
 TIME_OFFSET = 3000
-LIKE_OFFSET = 4000
-UNLIKE_OFFSET = 5000
-COMMENT_OFFSET = 6000
-UNCOMMENT_OFFSET = 7000
-CONTINOUS_VISIT_OFFSET = 8000
-
+LIKE_COUNT_OFFSET = 4000
+COMMENT_COUNT_OFFSET = 5000
+CONTINUOUS_VISIT_OFFSET = 6000
+LAST_OFFSET = 7000
 
 ITEM_KEY = [u'玉米', u'臭豆腐', u'可樂', u'流星下的怨', u'星光戰士舞', u'Cloony 是大帥哥', ]
 ITEM_VALUE = {
@@ -62,7 +61,7 @@ TIME_VALUE = {
     date(2013, 2, 10): (u'農曆新年 2011', u'農曆新年快樂。', 'lunarnewyear2013.png'),
     }
 
-LIKED_COUNT_VALUE = {
+LIKE_COUNT_VALUE = {
     1: (u'第一個讚', u'送出了第一個讚。', 'like-count-1.png'),
     5: (u'第五個讚', u'送出了第五個讚。', 'like-count-5.png'),
     10: (u'第十個讚', u'送出了第十個讚。', 'like-count-10.png'),
@@ -80,12 +79,83 @@ COMMENT_COUNT_VALUE = {
     500: (u'第五百個註解', u'真有毅力！送出了第五百個註解。', 'comment-count-500.png'),
 }
 
-CONTINUOUS_VISIT_COUNT_VALUE = {
+CONTINUOUS_VISIT_KEY = [2, 7, 30, 365]
+CONTINUOUS_VISIT_VALUE = {
     2: (u'連續兩天', u'連續兩天光臨。', 'continuous-visit-count-2.png'),
     7: (u'連續一禮拜', u'連續一禮拜光臨。', 'continuous-visit-count-7.png'),
     30: (u'連續一個月', u'連續一個月光臨。', 'continuous-visit-count-30.png'),
     365: (u'連續一年', u'你贏了！連續一年光臨。', 'continuous-visit-count-365.png'),
 }
+
+
+class UserAchievement(db.Model):
+    owner = db.ReferenceProperty(FacebookUser, collection_name='achievement_set', required=True)
+    achievement_id = db.IntegerProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+    @property
+    def info(self):
+        aid = self.achievement_id
+        title, description, icon = None, None, None
+
+        if aid >= LAST_OFFSET:
+            pass
+        elif aid >= CONTINUOUS_VISIT_OFFSET:
+            key = aid - CONTINUOUS_VISIT_OFFSET
+            if key in CONTINUOUS_VISIT_VALUE:
+                title, description, icon = CONTINUOUS_VISIT_VALUE[key]
+        elif aid >= COMMENT_COUNT_OFFSET:
+            key = aid - COMMENT_COUNT_OFFSET
+            if key in COMMENT_COUNT_VALUE:
+                title, description, icon = COMMENT_COUNT_VALUE[key]
+        elif aid >= LIKE_COUNT_OFFSET:
+            key = aid - LIKE_COUNT_OFFSET
+            if key in LIKE_COUNT_VALUE:
+                title, description, icon = LIKE_COUNT_VALUE[key]
+        elif aid >= TIME_OFFSET:
+            idx = aid - TIME_OFFSET
+            if idx < len(TIME_KEY):
+                key = TIME_KEY[idx]
+                if key in TIME_VALUE:
+                    title, description, icon = TIME_VALUE[key]
+        elif aid >= ITEM_COUNT_OFFSET:
+            key = aid - ITEM_COUNT_OFFSET
+            if key in ITEM_COUNT_VALUE:
+                title, description, icon = ITEM_COUNT_VALUE[key]
+        elif aid >= ITEM_OFFSET:
+            idx = aid - ITEM_OFFSET
+            if idx < len(ITEM_KEY):
+                key = ITEM_KEY[idx]
+                if key in ITEM_VALUE:
+                    title = key
+                    description, icon = ITEM_VALUE[key]
+        else:
+            pass
+
+        if title and description and icon:
+            return {'title': title, 'description': description, 'icon': icon}
+        else:
+            return {}
+
+
+    # for serialization
+    def to_dict(self):
+        localtime = self.created + timedelta(hours=8)
+        fmt = None
+        if localtime.hour < 12:
+            fmt = "%Y年%m月%d號 上午%I:%M:%S"
+        else:
+            fmt = "%Y年%m月%d號 下午%I:%M:%S"
+
+        result = {'created_iso8601': self.created.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                  'created_local': localtime.strftime(fmt),
+                  'url': '/achievement/%s' % self.key().id(),
+                  }
+
+        # update result with actual achievement info
+        result.update(self.info)
+
+        return result
 
 
 def _check_item(obj):
@@ -98,7 +168,7 @@ def _check_item(obj):
     achievement_id = ITEM_OFFSET + ITEM_KEY.index(title)
 
     # check if already received achievement
-    query = UserAchievement.gql('WHERE owner = :1 AND achievement_id = :2', owner, achievement_id)
+    query = owner.achievement_set.filter('achievement_id =', achievement_id)
     if query.count() > 0:
         return []
 
@@ -111,16 +181,15 @@ def _check_item(obj):
 def _check_item_count(obj):
     owner = obj.owner
 
-    query = MidautumnObject.gql('WHERE owner = :1', owner)
-    count = query.count()
+    count = owner.object_set.count()
 
-    if count not in (1, 5, 10, 50, 100, 500):
+    if count not in ITEM_COUNT_VALUE:
         return []
 
     achievement_id = ITEM_COUNT_OFFSET + count
 
     # check if already received achievement
-    query = UserAchievement.gql('WHERE owner = :1 AND achievement_id = :2', owner, achievement_id)
+    query = owner.achievement_set.filter('achievement_id =', achievement_id)
     if query.count() > 0:
         return []
 
@@ -147,18 +216,18 @@ def check_comment():
 
 def check_continuous_visit(user):
     count = user.continuous_visit_count
-    if count not in (2, 7, 30, 365):
+    if count not in CONTINUOUS_VISIT_VALUE:
         return []
 
     achievement_id = CONTINUOUS_VISIT_OFFSET + count
 
     # check if already received achievement
-    query = UserAchievement.gql('WHERE owner = :1 AND achievement_id = :2', user.id, achievement_id)
+    query = user.achievement_set.filter('achievement_id =', achievement_id)
     if query.count() > 0:
         return []
 
-    ua = UserAchievement(owner=user.id, achievement_id=achievement_id)
+    ua = UserAchievement(owner=user, achievement_id=achievement_id)
     key = ua.put()
 
-    title, description, icon = CONTINUOUS_VISIT_COUNT_VALUE[count]
+    title, description, icon = CONTINUOUS_VISIT_VALUE[count]
     return [{'key': key.id(), 'title': title, 'description': description, 'icon': icon}]

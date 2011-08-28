@@ -24,51 +24,59 @@ class ObjectHandler(BaseHandler):
 
     def post(self):
         title = self.request.get('title')
-        owner = self.request.get('owner')
         timestamp = self.request.get('timestamp')
 
-        # Check duplicate
-        q = db.GqlQuery("SELECT * FROM MidautumnObject WHERE title = :1", title)
-        if q.count(1) > 0:
-            self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps({'result': 'duplicated', 'title': title}))
-            return
+        user = self.current_user
+        query = db.GqlQuery("SELECT * FROM MidautumnObject WHERE title = :1", title)
 
-        # Not duplicated
-        mo = MidautumnObject(title=title, owner=owner)
-        mo.put()
+        args = None
 
-        # fetch all objects after the timestamp
-        # should include the one just posted
-        q = MidautumnObject.all()
-        q.filter('pubtime >', datetime.utcfromtimestamp(float(timestamp)))
-        q.order('-pubtime')
+        if not user:
+            args = {'result': 'not_authorized'}
+        elif query.count(1) > 0:
+            args = {'result': 'duplicated', 'title': title}
+        else:
+            mo = MidautumnObject(title=title, owner=user)
+            mo.put()
 
-        objects = []
-        for obj in q:
-            objects.append(obj.to_dict())
+            # fetch all objects after the timestamp
+            # should include the one just posted
+            query = MidautumnObject.all()
+            query.filter('pubtime >', datetime.utcfromtimestamp(float(timestamp)))
+            query.order('-pubtime')
 
-        # check achievements
-        achievements = []
-        achievements.extend(achievement.check_post(mo))
+            objects = []
+            for obj in query:
+                objects.append(obj.to_dict())
+
+            # check achievements
+            achievements = []
+            achievements.extend(achievement.check_post(mo))
+
+            args = {'result': 'success',
+                    'objects': objects,
+                    'achievements': achievements}
 
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps({'result': 'success',
-                                            'objects': objects,
-                                            'achievements': achievements}))
+        self.response.out.write(json.dumps(args))
 
     def get(self, key):
+        user = self.current_user
+
         mo = MidautumnObject.get_by_id(int(key))
 
-        self.response.headers['Content-Type'] = 'application/json'
+        args = None
 
-        if mo == None:
-            self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps({'result': 'not_exist', 'key': key}))
+        if not user:
+            args = {'result': 'not_authorized'}
+        if not mo:
+            args = {'result': 'not_exist', 'key': key}
         else:
-            self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps({'result': 'success', 'objs': [mo.to_dict(),]}))
+            args = {'result': 'success',
+                    'objects': [mo.to_dict(),]}
 
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(args))
 
 class ObjectsHandler(BaseHandler):
 
@@ -107,21 +115,22 @@ class EdgeHandler(BaseHandler):
         action = self.request.get('action', None)
         url = self.request.get('url', None)
 
+        user = self.current_user
+
         args = None
 
-        if not self.current_user:
+        if not user:
             args = {'result': 'not_authorized'}
         elif action not in ('create', 'remove'):
             args = {'result': 'unknown_action'}
         elif not url:
             args = {'result': 'missing_parameter'}
         else:
-            q = FacebookEdge.all()
-            q.filter('owner =', self.current_user.id)
-            q.filter('url =', url)
-            edge = q.get()
+            query = user.edge_set
+            query.filter('url =', url)
+            edge = query.get()
             if not edge:
-                edge = FacebookEdge(owner=self.current_user.id, url=url)
+                edge = FacebookEdge(owner=user, url=url)
             if action == 'create':
                 edge.connected = True
                 edge.created = True
@@ -143,29 +152,30 @@ class CommentHandler(BaseHandler):
         href = self.request.get('href', None)
         commentID = self.request.get('commentID', None)
 
+        user = self.current_user
+
         args = None
 
-        if not self.current_user:
+        if not user:
             args = {'result': 'not_authorized'}
         elif action not in ('create', 'remove'):
             args = {'result': 'unknown_action'}
         elif not href or not commentID:
             args = {'result': 'missing_parameter'}
         else:
-            q = FacebookComment.all()
-            q.filter('owner =', self.current_user.id)
-            q.filter('href =', href)
-            q.filter('commentID =', commentID)
-            edge = q.get()
+            query = user.comment_set
+            query.filter('href =', href)
+            query.filter('commentID =', commentID)
+            comment = query.get()
 
-            if (action == 'create' and edge) or (action == 'remove' and not edge):
+            if (action == 'create' and comment) or (action == 'remove' and not comment):
                 args = {'result': 'invalid_state'}
             elif action == 'create':
-                edge = FacebookComment(owner=self.current_user.id, href=href, comment_id=commentID)
-                edge.put()
+                comment = FacebookComment(owner=user, href=href, comment_id=commentID)
+                comment.put()
                 args = {'result': 'success'}
             else:
-                edge.delete()
+                comment.delete()
                 args = {'result': 'success'}
 
         self.response.headers['Content-Type'] = 'application/json'

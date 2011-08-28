@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
-from midautumn.models import MidautumnObject, FacebookEdge, FacebookComment
+from midautumn.models import MidautumnObject, FacebookUser
 from midautumn.handlers import BaseHandler
 
 
@@ -51,39 +51,52 @@ class HomeHandler(BaseHandler):
 class ProfileHandler(BaseHandler):
     def get(self, profile_id):
         args = {}
+        pagename = None
 
-        query = MidautumnObject.all()
-        query.filter('owner =', profile_id)
-        query.order('pubtime')
-        objects = []
-        for obj in query:
-            objects.append(obj.to_dict())
-        args['objects'] = objects
+        # check if requested profile exist
+        profile = FacebookUser.get_by_key_name(profile_id)
+        if profile:
+            # objects from requested profile
+            query = profile.object_set
+            query.order('pubtime')
+            objects = []
+            for obj in query:
+                objects.append(obj.to_dict())
+            args['objects'] = objects
 
-        query = FacebookEdge.all()
-        query.filter('owner =', profile_id)
-        query.filter('connected =', True)
-        args['liked_count'] = query.count()
+            # achievements from requested profile
+            query = profile.achievement_set
+            query.order('created')
+            achievements = []
+            for achi in query:
+                achievements.append(achi.to_dict())
+            args['achievements'] = achievements
 
-        query = FacebookEdge.all()
-        query.filter('owner =', profile_id)
-        query.filter('created =', True)
-        args['liked_created_count'] = query.count()
+            # misc statistics
+            query = profile.edge_set
+            query.filter('connected =', True)
+            args['liked_count'] = query.count()
 
-        query = FacebookEdge.all()
-        query.filter('owner =', profile_id)
-        query.filter('removed =', True)
-        args['liked_removed_count'] = query.count()
+            query = profile.edge_set
+            query.filter('created =', True)
+            args['liked_created_count'] = query.count()
 
-        query = FacebookComment.all()
-        query.filter('owner =', profile_id)
-        args['comment_count'] = query.count()
+            query = profile.edge_set
+            query.filter('removed =', True)
+            args['liked_removed_count'] = query.count()
 
-        # added profile related info
+            query = profile.comment_set
+            args['comment_count'] = query.count()
+
+            pagename = 'profile.html'
+        else:
+            pagename = 'profile_not_found.html'
+
+        # current user related info
         args.update(self.current_user_profile)
 
         dirname = os.path.dirname(__file__)
-        path = os.path.join(dirname, 'view', 'profile.html')
+        path = os.path.join(dirname, 'view', pagename)
         self.response.out.write(template.render(path, args))
 
 

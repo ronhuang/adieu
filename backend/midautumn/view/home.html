@@ -12,7 +12,6 @@
               <div class="clearfix">
                 <div class="input">
                   <input class="xlarge" name="title" size="30" type="text">
-                  <input name="owner" value="{{ profile_id }}" type="hidden">
                   <input name="timestamp" value="0" type="hidden">
                   <button type="submit" class="btn primary disabled">送出</button>
                 </div>
@@ -74,6 +73,9 @@
               <div class="comment" style="display: none;"></div>
             </div>
           </div>
+        </div>
+        {% empty %}
+        <div class="row">
         </div>
         {% endfor %}
       </section>

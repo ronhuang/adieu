@@ -34,7 +34,7 @@ $(document).ready(function(){
       status: true,
       cookie: true,
       xfbml: true,
-      channelUrl: 'http://midautumn.ronhuang.org/channel',
+      channelUrl: document.location.protocol + '//' + document.location.host + '/channel',
       oauth: true
     });
 
@@ -156,46 +156,6 @@ $(document).ready(function(){
     FB.Event.subscribe('auth.statusChange', loginStatusChanged);
   };
 
-  var updateObjects = function  (response) {
-    if (response.authResponse) {
-      $.ajax({
-        url: 'api/objects',
-        dataType: 'json',
-        success: function (data, status) {
-          if (data.result == 'success') {
-            var container = $('#list');
-            for (var i in data.objects) {
-              var obj = data.objects[i];
-              var relative_url = '/object/' + obj.key;
-              var absolute_url = document.location.protocol + '//' + document.location.host + relative_url;
-
-              var template = container.find('div:first').clone();
-
-              var fb_like = '<fb:like href="' + absolute_url + '" send="false" ' +
-                'layout="button_count" width="200" show_faces="false" ' +
-                'action="like"></fb:like>';
-              $(fb_like).appendTo(template.find('.share'));
-
-              var fb_comment = '<fb:comments href="' + absolute_url + '" num_posts="2" width="400"></fb:comments>';
-              $(fb_comment).appendTo(template.find('.comment'));
-
-              template.find('.title').text(obj.title);
-              template.find('.timeago').attr('href', relative_url).attr('title', obj.pubtime).timeago();
-              template.find('img:first').attr('src', 'http://graph.facebook.com/' + obj.owner + '/picture?type=square');
-
-              template.show();
-              container.append(template);
-            }
-            FB.XFBML.parse(container[0]);
-          }
-        },
-        error: function (xhr, status) {
-        },
-      });
-    } else {
-    }
-  };
-
 
   // menu
   $("body").bind("click", function(e) {
@@ -260,7 +220,10 @@ $(document).ready(function(){
     }
 
     // update timestamp (of the latest object) in the form
-    var latest = $('#list .row:first .timestamp').text()
+    var latest = $('#list .row:first .timestamp').text();
+    if (latest.length <= 0) {
+      latest = "0";
+    }
     $('#add input[name=timestamp]').val(latest)
 
     $.post('/api/object', $('#add form').serialize(), objectPosted, 'json');

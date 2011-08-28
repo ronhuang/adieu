@@ -7,42 +7,7 @@
 
 import time
 from google.appengine.ext import db
-from datetime import datetime, timedelta
-
-
-SIMPLE_TYPES = (int, long, float, bool, dict, basestring, list)
-
-
-class MidautumnObject(db.Model):
-    title = db.StringProperty(required=True)
-    owner = db.StringProperty(required=True)
-    pubtime = db.DateTimeProperty(required=True, auto_now_add=True)
-
-    # for serialization
-    def to_dict(self):
-        localtime = self.pubtime + timedelta(hours=8)
-        fmt = None
-        if localtime.hour < 12:
-            fmt = "%Y年%m月%d號 上午%I:%M:%S"
-        else:
-            fmt = "%Y年%m月%d號 下午%I:%M:%S"
-
-        return {'owner_picture': 'http://graph.facebook.com/%s/picture?type=square' % self.owner,
-                'title': self.title,
-                'pubtime_iso8601': self.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'pubtime_local': localtime.strftime(fmt),
-                'timestamp': int(time.mktime(self.pubtime.timetuple())),
-                'relative_url': '/object/%s' % self.key().id(),
-                'absolute_url': 'http://midautumn.ronhuang.org/object/%s' % self.key().id(),
-                }
-
-
-
-class UserAchievement(db.Model):
-    owner = db.StringProperty(required=True)
-    achievement_id = db.IntegerProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-    object_id = db.StringProperty()
+from datetime import timedelta
 
 
 class FacebookUser(db.Model):
@@ -56,8 +21,38 @@ class FacebookUser(db.Model):
     continuous_visit_count = db.IntegerProperty(required=True, default=1)
 
 
+# UserAchievement is moved to achievement.py
+
+
+class MidautumnObject(db.Model):
+    title = db.StringProperty(required=True)
+    owner = db.ReferenceProperty(FacebookUser, collection_name='object_set', required=True)
+    pubtime = db.DateTimeProperty(required=True, auto_now_add=True)
+
+    # for serialization
+    def to_dict(self):
+        localtime = self.pubtime + timedelta(hours=8)
+        fmt = None
+        if localtime.hour < 12:
+            fmt = "%Y年%m月%d號 上午%I:%M:%S"
+        else:
+            fmt = "%Y年%m月%d號 下午%I:%M:%S"
+
+        uid = self.owner.id
+        relative_url = '/object/%s' % self.key().id()
+
+        return {'owner_picture': 'http://graph.facebook.com/%s/picture?type=square' % uid,
+                'title': self.title,
+                'pubtime_iso8601': self.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'pubtime_local': localtime.strftime(fmt),
+                'timestamp': int(time.mktime(self.pubtime.timetuple())),
+                'relative_url': relative_url,
+                'absolute_url': 'http://midautumn.ronhuang.org/%s' % relative_url,
+                }
+
+
 class FacebookEdge(db.Model):
-    owner = db.StringProperty(required=True)
+    owner = db.ReferenceProperty(FacebookUser, collection_name='edge_set', required=True)
     url = db.StringProperty(required=True)
     connected = db.BooleanProperty()
     created = db.BooleanProperty()
@@ -65,6 +60,6 @@ class FacebookEdge(db.Model):
 
 
 class FacebookComment(db.Model):
-    owner = db.StringProperty(required=True)
+    owner = db.ReferenceProperty(FacebookUser, collection_name='comment_set', required=True)
     href = db.StringProperty(required=True)
     comment_id = db.StringProperty(required=True)

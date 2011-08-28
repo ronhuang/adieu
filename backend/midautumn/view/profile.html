@@ -23,12 +23,23 @@
         {% endfor %}
       </section>
 
-      <section id="recommendations">
+      <section id="achievements">
         <div class="page-header">
-          <h1>成就<small>你目前所擁有的成就</small></h1>
-          <div class="row">
-          </div>
+          <h1>成就<small>按照得到成就的時間排序</small></h1>
         </div>
+        {% for achi in achievements %}
+        {% if forloop.counter0|divisibleby:4 %}
+        <div class="row">
+        {% endif %}
+          <div class="span4 columns">
+            <h4>{{ achi.title }}</h4>
+            <!-- icon -->
+            <a class="timeago" href="{{ achi.url }}" title="{{ achi.created_iso8601 }}">{{ achi.created_local }}</a>
+          </div>
+        {% if forloop.counter|divisibleby:4 %}
+        </div>
+        {% endif %}
+        {% endfor %}
       </section>
 
       <section id="others">
