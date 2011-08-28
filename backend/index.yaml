@@ -24,3 +24,8 @@ indexes:
   properties:
   - name: owner
   - name: pubtime
+
+- kind: UserAchievement
+  properties:
+  - name: owner
+  - name: created
