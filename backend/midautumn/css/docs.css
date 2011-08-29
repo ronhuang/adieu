@@ -38,10 +38,13 @@ a.menu img {
   display: none;
 }
 #list .comment-container .banner {
-  background-color: #FBFBFB;
+  background-color: #FAFAFA;
   border-bottom: 1px solid #E3E3E3;
   padding: 8px;
   cursor: pointer;
+}
+#list .comment-container .banner:hover {
+  background-color: #F4F4F4;
 }
 #list .comment-container .button {
   background-image: url(/img/collapse.png);
@@ -65,6 +68,9 @@ div.more-button {
   background-color: #FAFAFA;
   border-bottom: 1px solid #E3E3E3;
   cursor: pointer;
+}
+div.more-button:hover {
+  background-color: #F4F4F4;
 }
 div.more-throbber {
   background-image: url(/img/throbber.gif);
