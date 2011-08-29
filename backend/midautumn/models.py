@@ -9,6 +9,7 @@ import time
 import re
 from google.appengine.ext import db
 from datetime import timedelta
+from midautumn.utils import pretty_time
 
 
 class FacebookUser(db.Model):
@@ -20,6 +21,17 @@ class FacebookUser(db.Model):
     access_token = db.StringProperty(required=True)
     continuous_visit_start = db.DateTimeProperty(auto_now_add=True)
     continuous_visit_count = db.IntegerProperty(required=True, default=1)
+
+    @property
+    def profile(self):
+        relative_url = '/profile/%s' % self.id
+        return {'relative_url': relative_url,
+                'absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
+                'picture': 'http://graph.facebook.com/%s/picture?type=square' % self.id,
+                'name': self.name,
+                'id': self.id,
+                'created': pretty_time(self.created),
+                }
 
 
 # UserAchievement is moved to achievement.py

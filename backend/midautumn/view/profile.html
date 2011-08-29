@@ -1,17 +1,31 @@
 {% extends "base-menu.html" %}
 
-{% block title %}{{ profile_name }} - 中秋烤肉{% endblock %}
-{% block description %}{{ profile_name }}在中秋烤肉上的資料。{% endblock %}
-{% block og-title %}{{ profile_name }} - 中秋烤肉{% endblock %}
-{% block og-description %}{{ profile_name }}在中秋烤肉上的資料。{% endblock %}
+{% block title %}{{ requested_profile.name }} - 中秋烤肉{% endblock %}
+{% block description %}{{ requested_profile.name }}在中秋烤肉上的資料。{% endblock %}
+{% block og-title %}{{ requested_profile.name }} - 中秋烤肉{% endblock %}
+{% block og-description %}{{ requested_profile.name }}在中秋烤肉上的資料。{% endblock %}
 {% block og-type %}profile{% endblock %}
-{% block og-url %}{{ profile_absolute_url }}{% endblock %}
-{% block og-image %}{{ profile_picture }}{% endblock %}
+{% block og-url %}{{ requested_profile.absolute_url }}{% endblock %}
+{% block og-image %}{{ requested_profile.picture }}{% endblock %}
 
 {% block body-class %}profile{% endblock %}
 
 {% block content %}
     <div class="container">
+
+      <section id="profile">
+        <div class="row">
+          <div class="page-header">
+            <h1>{{ requested_profile.name }}</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="span4 columns well">
+            <h4>加入時間</h4>
+            <abbr class="timeago" title="{{ requested_profile.created.iso8601 }}">{{ requested_profile.created.localized }}</abbr>
+          </div>
+        </div>
+      </section>
 
       <section id="recommendations">
         <div class="row">

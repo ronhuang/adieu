@@ -91,6 +91,8 @@ class ProfileHandler(BaseHandler):
             query = profile.comment_set
             args['comment_count'] = query.count()
 
+            args['requested_profile'] = profile.profile
+
             pagename = 'profile.html'
         else:
             pagename = 'profile_not_found.html'
