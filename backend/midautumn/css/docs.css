@@ -11,6 +11,9 @@ section {
 #footer {
   margin-top: 80px;
 }
+#navbar .hidden {
+  display: none;
+}
 a.menu img {
   vertical-align: middle;
 }

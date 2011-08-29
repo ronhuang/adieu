@@ -39,8 +39,8 @@ class HomeHandler(BaseHandler):
             args = {'objects': objects,
                     'cursor': query.cursor(),
                     'more': len(objects) >= 10,
+                    'profile': self.current_user.profile,
                     }
-            args.update(self.current_user_profile)
         else:
             pagename = 'register.html'
             args = None
@@ -98,7 +98,8 @@ class ProfileHandler(BaseHandler):
             pagename = 'profile_not_found.html'
 
         # current user related info
-        args.update(self.current_user_profile)
+        if self.current_user:
+            args['profile'] = self.current_user.profile
 
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', pagename)
@@ -119,7 +120,9 @@ class ObjectHandler(BaseHandler):
             pagename = "object.html"
             args = mo.to_dict()
 
-        args.update(self.current_user_profile)
+        # current user related info
+        if self.current_user:
+            args['profile'] = self.current_user.profile
 
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', pagename)
@@ -140,7 +143,9 @@ class AchievementHandler(BaseHandler):
             pagename = "achievement.html"
             args = ua.to_dict()
 
-        args.update(self.current_user_profile)
+        # current user related info
+        if self.current_user:
+            args['profile'] = self.current_user.profile
 
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, 'view', pagename)

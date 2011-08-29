@@ -186,6 +186,16 @@ $(document).ready(function(){
   var loginStatusChanged = function (response) {
     // subscribe here to avoid invoking loginStatusChanged twice.
     FB.Event.subscribe('auth.statusChange', loginStatusChanged);
+
+    if (response.authResponse) {
+      $('#navbar li.menu').removeClass('hidden');
+      $('#navbar li.profile').removeClass('hidden');
+      $('#navbar li.login').addClass('hidden');
+    } else {
+      $('#navbar li.menu').addClass('hidden');
+      $('#navbar li.profile').addClass('hidden');
+      $('#navbar li.login').removeClass('hidden');
+    }
   };
 
 
