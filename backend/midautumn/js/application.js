@@ -96,7 +96,7 @@ $(document).ready(function(){
     $(fb_comment_count).appendTo(cloned.find('.comment-container .count span'));
 
     cloned.find('.title').text(obj.title);
-    cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime_iso8601).text(obj.pubtime_local).timeago();
+    cloned.find('.timeago').attr('href', obj.relative_url).attr('title', obj.pubtime.iso8601).text(obj.pubtime.localized).timeago();
     cloned.find('.delete').attr('title', '刪除' + obj.title).addClass(obj.modifiable ? 'modifiable' : '');
     cloned.find('img:first').attr('src', obj.owner_picture);
     cloned.find('.timestamp').text(obj.timestamp);

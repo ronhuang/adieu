@@ -63,9 +63,9 @@
           </div>
           <div class="span10 columns">
             <h2 class="title">{{ obj.title }}</h2>
-            <span class="timestamp" style="display: none;">{{ obj.timestamp }}</span>
+            <span class="timestamp" style="display: none;">{{ obj.pubtime.timestamp }}</span>
             <div class="action">
-              <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime_iso8601 }}">{{ obj.pubtime_local }}</a>
+              <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime.iso8601 }}">{{ obj.pubtime.localized }}</a>
               <a class="delete {% if obj.modifiable %}modifiable{% endif %}" href="#" title="刪除{{ obj.title }}">刪除</a>
             </div>
             <div class="like">

@@ -16,6 +16,7 @@ from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext import db
 from django.utils import simplejson as json
 from midautumn.models import FacebookUser
+from midautumn.utils import pretty_time
 
 
 ITEM_OFFSET = 1000
@@ -155,16 +156,8 @@ class UserAchievement(db.Model):
 
     # for serialization
     def to_dict(self):
-        localtime = self.created + timedelta(hours=8)
-        fmt = None
-        if localtime.hour < 12:
-            fmt = "%Y年%m月%d號 上午%I:%M:%S"
-        else:
-            fmt = "%Y年%m月%d號 下午%I:%M:%S"
-
         relative_url = '/achievement/%s' % self.key().id()
-        result = {'created_iso8601': self.created.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                  'created_local': localtime.strftime(fmt),
+        result = {'created': pretty_time(self.created),
                   'relative_url': relative_url,
                   'absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
                   }

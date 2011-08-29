@@ -67,9 +67,7 @@ class MidautumnObject(db.Model):
 
         result = {'owner_picture': 'http://graph.facebook.com/%s/picture?type=square' % uid,
                   'title': self.title,
-                  'pubtime_iso8601': self.pubtime.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                  'pubtime_local': localtime.strftime(fmt),
-                  'timestamp': int(time.mktime(self.pubtime.timetuple())),
+                  'pubtime': pretty_time(self.pubtime),
                   'relative_url': relative_url,
                   'absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
                   }
