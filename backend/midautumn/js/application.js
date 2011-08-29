@@ -188,10 +188,28 @@ $(document).ready(function(){
     FB.Event.subscribe('auth.statusChange', loginStatusChanged);
 
     if (response.authResponse) {
-      $('#navbar li.menu').removeClass('hidden');
-      $('#navbar li.profile').removeClass('hidden');
-      $('#navbar li.login').addClass('hidden');
+      // get profile if needed
+      var profile_hidden = $('#navbar li.menu').hasClass('hidden');
+
+      if (profile_hidden) {
+        FB.api('/me', function (info) {
+          var url = '/profile/' + info.id;
+          var picture = 'http://graph.facebook.com/' + info.id + '/picture?type=square';
+          var name = info.name;
+
+          // update profile info
+          $('#navbar .profile a').attr('href', url);
+          $('#navbar a.menu img').attr('src', picture);
+          $('#navbar a.menu span').text(name);
+
+          // show elements displaying profile info
+          $('#navbar li.menu').removeClass('hidden');
+          $('#navbar li.profile').removeClass('hidden');
+          $('#navbar li.login').addClass('hidden');
+        });
+      }
     } else {
+      // hide elements displaying profile info
       $('#navbar li.menu').addClass('hidden');
       $('#navbar li.profile').addClass('hidden');
       $('#navbar li.login').removeClass('hidden');
