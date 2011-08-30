@@ -28,7 +28,9 @@ CONTINUOUS_VISIT_OFFSET = 6000
 MISC_OFFSET = 7000
 LAST_OFFSET = 8000
 
-ITEM_KEY = [u'玉米', u'臭豆腐', u'可樂', u'流星下的怨', u'星光戰士舞', u'Cloony 是大帥哥', ]
+ITEM_KEY = [u'玉米', u'臭豆腐', u'可樂', u'流星下的怨', u'星光戰士舞',
+            u'Cloony 是大帥哥', u'草莓', u'蝦子', u'西瓜', u'仙女棒',
+            u'打火機', u'假假課', ]
 ITEM_VALUE = {
     u'玉米': (u'Ron 的最愛。', 'corn.png'),
     u'臭豆腐': (u'臭豆腐怎麼烤啊？', 'stinky-tofu.png'),
@@ -87,7 +89,6 @@ COMMENT_COUNT_VALUE = {
     300: (u'這就是斯巴達！（留言）', u'這就是斯巴達！送出了第三百個留言。', 'comment-count-300.png'),
 }
 
-CONTINUOUS_VISIT_KEY = [2, 7, 30, 365]
 CONTINUOUS_VISIT_VALUE = {
     2: (u'回鍋', u'人客～您昨天也有來ㄟ！', 'continuous-visit-count-2.png'),
     7: (u'連續一週', u'週末假日也上班，薪資加倍。', 'continuous-visit-count-7.png'),
