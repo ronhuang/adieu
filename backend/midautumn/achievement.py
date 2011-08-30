@@ -44,7 +44,7 @@ ITEM_COUNT_VALUE = {
     10: (u'第十個物品', u'恭喜你推薦了你的第十個物品。', 'item-count-10.png'),
     50: (u'第五十個物品', u'太誇張了！你推薦了你的第五十個物品。', 'item-count-50.png'),
     100: (u'第一百個物品', u'你贏了！你推薦了你的第一百個物品。', 'item-count-100.png'),
-    500: (u'第五百個物品', u'真有毅力！你推薦了你的第五百個物品。', 'item-count-500.png'),
+    300: (u'這就是斯巴達！（物品）', u'這就是斯巴達！你推薦了你的第三百個物品。', 'item-count-300.png'),
     }
 
 TIME_KEY = [date(2011, 9, 12), date(2012, 9, 13),
@@ -69,7 +69,7 @@ LIKE_COUNT_VALUE = {
     10: (u'第十個讚', u'送出了第十個讚。', 'like-count-10.png'),
     50: (u'第五十個讚', u'太誇張了！送出了第五十個讚。', 'like-count-50.png'),
     100: (u'第一百個讚', u'你贏了！送出了第一百個讚。', 'like-count-100.png'),
-    500: (u'第五百個讚', u'真有毅力！送出了第五百個讚。', 'like-count-500.png'),
+    300: (u'這就是斯巴達！（讚）', u'這就是斯巴達！送出了第三百個讚。', 'like-count-300.png'),
 }
 
 COMMENT_COUNT_VALUE = {
@@ -78,7 +78,7 @@ COMMENT_COUNT_VALUE = {
     10: (u'第十個留言', u'送出了第十個留言。', 'comment-count-10.png'),
     50: (u'第五十個留言', u'太誇張了！送出了第五十個留言。', 'comment-count-50.png'),
     100: (u'第一百個留言', u'你贏了！送出了第一百個留言。', 'comment-count-100.png'),
-    500: (u'第五百個留言', u'真有毅力！送出了第五百個留言。', 'comment-count-500.png'),
+    300: (u'這就是斯巴達！（留言）', u'這就是斯巴達！送出了第三百個留言。', 'comment-count-300.png'),
 }
 
 CONTINUOUS_VISIT_KEY = [2, 7, 30, 365]
