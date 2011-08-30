@@ -33,7 +33,7 @@
 
       <section id="list-template" style="display: none;">
         <div class="row well" style="display: none;">
-          <div class="span2 columns offset1">
+          <div class="span3 columns badge">
             <img alt="推薦者圖示" src="img/blank.jpg" width="64" height="64">
           </div>
           <div class="span10 columns">
@@ -58,7 +58,7 @@
       <section id="list">
         {% for obj in objects %}
         <div class="row well">
-          <div class="span2 columns offset1">
+          <div class="span3 columns badge">
             <img alt="推薦者圖示" src="{{ obj.owner_picture }}" width="64" height="64">
           </div>
           <div class="span10 columns">

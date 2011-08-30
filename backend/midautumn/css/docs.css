@@ -93,6 +93,9 @@ div.more-empty {
   font-size: 150%;
   display: none;
 }
+div.badge {
+  text-align: center;
+}
 #achievements img {
   float: right;
 }
