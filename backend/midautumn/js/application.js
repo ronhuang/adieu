@@ -366,7 +366,7 @@ $(document).ready(function(){
     e.preventDefault();
 
     var dlg = $('div.modal');
-    var parents = $(this).parentsUntil('#list');
+    var parents = $(this).parentsUntil('section');
     var row = parents.slice(-1);
     var title = row.find('.title').text();
     var url = row.find('a.timeago').attr('href');
@@ -401,13 +401,13 @@ $(document).ready(function(){
   });
 
   // share
-  $('#list .share').live('click', function (e) {
+  $('#list .share, #object .share').live('click', function (e) {
     e.preventDefault();
 
-    var parents = $(this).parentsUntil('#list');
+    var parents = $(this).parentsUntil('section');
     var row = parents.slice(-1);
     var title = row.find('.title').text();
-    var url = row.find('fb\\:like').attr('href');
+    var url = row.find('fb\\:like').attr('href') || document.location.href;
     var picture = 'http://midautumn.ronhuang.org/img/open-graph-image.png';
 
     FB.ui({
@@ -420,8 +420,27 @@ $(document).ready(function(){
       description: '我在「中秋烤肉」推薦' + title + '。又到了久違的中秋烤肉萬家香的季節，所以要邀請各位來烤肉。請上「中秋烤肉」投票你想要的物品，或是推薦更多物品。',
     }, function (response) {
     });
-
   });
 
+  $('#achievement .share').live('click', function (e) {
+    e.preventDefault();
+
+    var parents = $(this).parentsUntil('section');
+    var row = parents.slice(-1);
+    var title = row.find('.title').text();
+    var url = document.location.href;
+    var picture = 'http://midautumn.ronhuang.org' + row.find('img.badge').attr('src');
+
+    FB.ui({
+      method: 'feed',
+      display: 'popup',
+      name: title,
+      link: url,
+      picture: picture,
+      caption: '成就系統',
+      description: '我在「中秋烤肉」獲得「' + title + '」的成就。又到了久違的中秋烤肉萬家香的季節，所以要邀請各位來烤肉。想要更多成就嗎？請上「中秋烤肉」投票你想要的物品，或是推薦更多物品。',
+    }, function (response) {
+    });
+  });
 
 });

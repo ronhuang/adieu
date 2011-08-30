@@ -135,3 +135,9 @@ img.badge.large {
 #confirmation {
   top: 100%;
 }
+#object fb\:comments, #achievement fb\:comments {
+  margin-top: 1em;
+}
+#object .share, #achievement .share {
+  margin-left: 0.5em;
+}
