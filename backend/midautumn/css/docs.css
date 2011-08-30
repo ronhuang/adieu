@@ -25,7 +25,19 @@ body {
 a.menu img {
   vertical-align: middle;
 }
-#add {
+#add .logo {
+  background-image: url(/img/logo.png);
+  background-repeat: no-repeat;
+  height: 192px;
+}
+#add .logo:hover {
+  background-image: url(/img/logo-hover.png);
+}
+#add form {
+  padding-top: 50px;
+}
+#add input[name=title] {
+  width: 300px;
 }
 #notification {
 }

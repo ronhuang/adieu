@@ -5,7 +5,8 @@
 {% block content %}
     <div class="container" id="add">
       <div class="row">
-        <div class="span16 columns">
+        <div class="span4 columns logo"></div>
+        <div class="span7 columns">
           <form action="/api/object" class="form-stacked" method="post">
             <fieldset>
               <legend>想吃什麼？</legend>
@@ -18,6 +19,9 @@
               </div>
             </fieldset>
           </form>
+        </div>
+        <div class="span5 columns">
+          <fb:activity width="280" height="192" header="false" recommendations="false"></fb:activity>
         </div>
       </div>
     </div>
