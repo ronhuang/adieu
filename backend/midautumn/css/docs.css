@@ -3,7 +3,14 @@ body {
   position: relative;
   padding-top: 60px;
 }
-#header {
+body.register {
+  padding-top: 20px;
+}
+.header .title {
+  padding-top: 50px;
+}
+.introduction section {
+  margin-top: 40px;
 }
 #footer {
   margin-top: 80px;
@@ -25,12 +32,12 @@ body {
 a.menu img {
   vertical-align: middle;
 }
-#add .logo {
+.logo {
   background-image: url(/img/logo.png);
   background-repeat: no-repeat;
   height: 192px;
 }
-#add .logo:hover {
+.logo:hover {
   background-image: url(/img/logo-hover.png);
 }
 #add form {
