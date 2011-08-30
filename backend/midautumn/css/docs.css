@@ -58,9 +58,6 @@ a.menu img {
   padding: 20px 0px;
   margin: 5px 0px;
 }
-#list .row img {
-  vertical-align: top;
-}
 #list .share {
 }
 #list .delete {
@@ -115,7 +112,19 @@ div.more-empty {
 div.badge {
   text-align: center;
 }
-#achievements img {
+img.badge {
+  width: 64px;
+  height: 64px;
+  -moz-border-radius: 64px;
+  -webkit-border-radius: 32px;
+}
+img.badge.large {
+  width: 128px;
+  height: 128px;
+  -moz-border-radius: 128px;
+  -webkit-border-radius: 64px;
+}
+#profile img, #achievements img {
   float: right;
 }
 #confirmation {

@@ -38,7 +38,7 @@
       <section id="list-template" style="display: none;">
         <div class="row well" style="display: none;">
           <div class="span3 columns badge">
-            <img alt="推薦者圖示" src="img/blank.jpg" width="64" height="64">
+            <img class="badge" alt="推薦者圖示" src="/img/blank.jpg">
           </div>
           <div class="span10 columns">
             <h2 class="title"></h2>
@@ -63,7 +63,7 @@
         {% for obj in objects %}
         <div class="row well">
           <div class="span3 columns badge">
-            <img alt="推薦者圖示" src="{{ obj.owner_picture }}" width="64" height="64">
+            <img class="badge" alt="推薦者圖示" src="{{ obj.owner_picture }}">
           </div>
           <div class="span10 columns">
             <h2 class="title">{{ obj.title }}</h2>
