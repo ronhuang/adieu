@@ -35,12 +35,18 @@ ITEM_VALUE = {
     u'可樂': (u'俊輝的最愛。', 'coke.png'),
     u'流星下的怨': (u'Cloony 和 San 的經典。', 'meteor.png'),
     u'星光戰士舞': (u'Leo 的代表作。', 'starlight-warrior.png'),
-    u'Cloony 是大帥哥': (u'...', 'cloony-toro.png'),
+    u'Cloony 是大帥哥': (u'圖示說明了一切。', 'cloony-toro.png'),
+    u'草莓': (u'跟阿撥沒有關係，純粹她照片太多。', 'strawberry.png'),
+    u'蝦子': (u'蝦子交給 Leo 串最快。', 'shrimp.png'),
+    u'西瓜': (u'跟阿撥沒有關係，純粹她照片太多。', 'watermelon.png'),
+    u'仙女棒': (u'阿伯與仙女棒。', 'sparkler.png'),
+    u'打火機': (u'或是找卡姐也可以。', 'lighter.png'),
+    u'假假課': (u'小寶的核心團隊。', 'section-fake.png'),
     }
 
 ITEM_COUNT_VALUE = {
-    1: (u'第一個物品', u'恭喜你推薦了你的第一個物品。', 'item-count-1.png'),
-    5: (u'第五個物品', u'恭喜你推薦了你的第五個物品。', 'item-count-5.png'),
+    1: (u'頭香', u'頭香不必搶，有提議就有保庇。', 'item-count-1.png'),
+    5: (u'幕後推手', u'就是需要你這種人！再多推薦一點！', 'item-count-5.png'),
     10: (u'第十個物品', u'恭喜你推薦了你的第十個物品。', 'item-count-10.png'),
     50: (u'第五十個物品', u'太誇張了！你推薦了你的第五十個物品。', 'item-count-50.png'),
     100: (u'第一百個物品', u'你贏了！你推薦了你的第一百個物品。', 'item-count-100.png'),
@@ -64,11 +70,11 @@ TIME_VALUE = {
     }
 
 LIKE_COUNT_VALUE = {
-    1: (u'第一個讚', u'送出了第一個讚。', 'like-count-1.png'),
-    5: (u'第五個讚', u'送出了第五個讚。', 'like-count-5.png'),
-    10: (u'第十個讚', u'送出了第十個讚。', 'like-count-10.png'),
-    50: (u'第五十個讚', u'太誇張了！送出了第五十個讚。', 'like-count-50.png'),
-    100: (u'第一百個讚', u'你贏了！送出了第一百個讚。', 'like-count-100.png'),
+    1: (u'應聲蟲', u'食指點一下就可以附和別人，過太爽。', 'like-count-1.png'),
+    5: (u'人云亦云', u'人家說什麼你就跟著說好！', 'like-count-5.png'),
+    10: (u'拾人牙慧', u'不必動腦很開心。', 'like-count-10.png'),
+    50: (u'攀龍附鳳', u'別人說的都是好的，總是要推一下。', 'like-count-50.png'),
+    100: (u'百發百中', u'恭喜你按了一百次「讚」。', 'like-count-100.png'),
     300: (u'這就是斯巴達！（讚）', u'這就是斯巴達！送出了第三百個讚。', 'like-count-300.png'),
 }
 
@@ -83,10 +89,10 @@ COMMENT_COUNT_VALUE = {
 
 CONTINUOUS_VISIT_KEY = [2, 7, 30, 365]
 CONTINUOUS_VISIT_VALUE = {
-    2: (u'連續兩天', u'連續兩天光臨。', 'continuous-visit-count-2.png'),
-    7: (u'連續一禮拜', u'連續一禮拜光臨。', 'continuous-visit-count-7.png'),
-    30: (u'連續一個月', u'連續一個月光臨。', 'continuous-visit-count-30.png'),
-    365: (u'連續一年', u'你贏了！連續一年光臨。', 'continuous-visit-count-365.png'),
+    2: (u'回鍋', u'人客～您昨天也有來ㄟ！', 'continuous-visit-count-2.png'),
+    7: (u'連續一週', u'週末假日也上班，薪資加倍。', 'continuous-visit-count-7.png'),
+    30: (u'滿月', u'上班都沒這麼勤快...。', 'continuous-visit-count-30.png'),
+    365: (u'全年無休', u'......你一定有在用外掛！', 'continuous-visit-count-365.png'),
 }
 
 LIKE_REMOVED_ACHIEVEMENT_ID = MISC_OFFSET + 1
