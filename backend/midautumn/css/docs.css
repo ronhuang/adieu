@@ -1,12 +1,9 @@
 body {
   background-color: #fff;
   position: relative;
-}
-section {
   padding-top: 60px;
 }
 #header {
-  padding: 45px 0;
 }
 #footer {
   margin-top: 80px;
@@ -29,7 +26,6 @@ a.menu img {
   vertical-align: middle;
 }
 #add {
-  margin-top: 60px;
 }
 #notification {
 }
