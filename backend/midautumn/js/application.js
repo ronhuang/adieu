@@ -400,4 +400,28 @@ $(document).ready(function(){
     dlg.fadeIn('fast');
   });
 
+  // share
+  $('#list .share').live('click', function (e) {
+    e.preventDefault();
+
+    var parents = $(this).parentsUntil('#list');
+    var row = parents.slice(-1);
+    var title = row.find('.title').text();
+    var url = row.find('fb\\:like').attr('href');
+    var picture = 'http://midautumn.ronhuang.org/img/open-graph-image.png';
+
+    FB.ui({
+      method: 'feed',
+      display: 'popup',
+      name: title,
+      link: url,
+      picture: picture,
+      caption: '推薦物品',
+      description: '我在「中秋烤肉」推薦' + title + '。又到了久違的中秋烤肉萬家香的季節，所以要邀請各位來烤肉。請上「中秋烤肉」投票你想要的物品，或是推薦更多物品。',
+    }, function (response) {
+    });
+
+  });
+
+
 });

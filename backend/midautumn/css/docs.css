@@ -59,9 +59,14 @@ a.menu img {
   margin: 5px 0px;
 }
 #list .share {
+  margin-left: 0.5em;
 }
 #list .delete {
   display: none;
+  margin-left: 0.5em;
+}
+#list .like {
+  margin-top: 1em;
 }
 #list .comment-container .banner {
   background-color: #FAFAFA;

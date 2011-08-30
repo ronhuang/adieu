@@ -45,6 +45,7 @@
             <span class="timestamp" style="display: none;"></span>
             <div class="action">
               <a class="timeago" href="#" title="2008-07-17T09:24:17Z"></a>
+              <a class="share" href="#" title="分享至 Facebook">分享</a>
               <a class="delete" href="#" title="刪除XXX">刪除</a>
             </div>
             <div class="like"></div>
@@ -70,6 +71,7 @@
             <span class="timestamp" style="display: none;">{{ obj.pubtime.timestamp }}</span>
             <div class="action">
               <a class="timeago" href="{{ obj.relative_url }}" title="{{ obj.pubtime.iso8601 }}">{{ obj.pubtime.localized }}</a>
+              <a class="share" href="#" title="分享至 Facebook">分享</a>
               <a class="delete {% if obj.modifiable %}modifiable{% endif %}" href="#" title="刪除{{ obj.title }}">刪除</a>
             </div>
             <div class="like">
