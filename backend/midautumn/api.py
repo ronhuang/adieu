@@ -88,7 +88,7 @@ class DeleteObjectHandler(BaseHandler):
             args = {'result': 'not_authorized'}
         elif not mo:
             args = {'result': 'not_exist', 'key': key}
-        elif mo.owner != user:
+        elif mo.owner.id != user.id:
             args = {'result': 'not_authorized'}
         else:
             mo.delete()
