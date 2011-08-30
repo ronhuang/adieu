@@ -8,8 +8,6 @@
             <a href="/">中秋烤肉</a>
           </h3>
           <ul class="primary-nav">
-            <li class="home"><a href="/">首頁</a></li>
-            <li class="profile {% if not profile %}hidden{% endif %}"><a href="{{ profile.relative_url }}">個人</a></li>
           </ul>
           <ul class="nav secondary-nav">
             <li class="menu {% if not profile %}hidden{% endif %}">
@@ -18,7 +16,7 @@
                 <span>{{ profile.name }}</span>
               </a>
               <ul class="menu-dropdown" style="display: none;">
-                <li><a href="#">Secondary link</a></li>
+                <li class="profile"><a href="{{ profile.relative_url }}">個人帳戶</a></li>
                 <li><a href="#" class="logout">登出</a></li>
               </ul>
             </li>

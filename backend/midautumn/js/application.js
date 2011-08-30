@@ -204,14 +204,12 @@ $(document).ready(function(){
 
           // show elements displaying profile info
           $('#navbar li.menu').removeClass('hidden');
-          $('#navbar li.profile').removeClass('hidden');
           $('#navbar li.login').addClass('hidden');
         });
       }
     } else {
       // hide elements displaying profile info
       $('#navbar li.menu').addClass('hidden');
-      $('#navbar li.profile').addClass('hidden');
       $('#navbar li.login').removeClass('hidden');
     }
   };
@@ -239,15 +237,6 @@ $(document).ready(function(){
     $parentSiblings.removeClass("open");
     return false;
   });
-
-  // highlight active primary menu
-  (function () {
-    var body = $('body');
-    if (body.hasClass('home'))
-      $('.primary-nav .home').addClass('active');
-    if (body.hasClass('profile'))
-      $('.primary-nav .profile').addClass('active');
-  }());
 
   // logout
   $("a.logout").click(function (e) {
