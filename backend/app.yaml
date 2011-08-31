@@ -30,6 +30,10 @@ handlers:
   static_files: midautumn/robots.txt
   upload: midautumn/robots.txt
 
+- url: /favicon.ico
+  static_files: midautumn/img/favicon.ico
+  upload: midautumn/img/favicon.ico
+
 - url: /css
   static_dir: midautumn/css
 
