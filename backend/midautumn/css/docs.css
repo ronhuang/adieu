@@ -15,6 +15,9 @@ body.register {
 #footer {
   margin-top: 80px;
 }
+#navbar h3 a {
+  padding-top: 10px;
+}
 #navbar .hidden {
   display: none;
 }
