@@ -478,6 +478,7 @@ $(document).ready(function(){
     var parents = $(this).parentsUntil('section');
     var row = parents.slice(-1);
     var title = row.find('.title').text();
+    var description = row.find('.description').text();
     var url = document.location.href;
     var picture = 'http://midautumn.ronhuang.org' + row.find('img.badge').attr('src');
 
@@ -487,7 +488,7 @@ $(document).ready(function(){
       name: title,
       link: url,
       picture: picture,
-      caption: '成就系統',
+      caption: description,
       description: '我在「中秋烤肉」獲得「' + title + '」的成就。又到了久違的中秋烤肉萬家香的季節，所以要邀請各位來烤肉。想要更多成就嗎？請上「中秋烤肉」投票你想要的物品，或是推薦更多物品。',
     }, function (response) {
     });
