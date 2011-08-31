@@ -60,7 +60,7 @@ $(document).ready(function(){
       var className = 'achievement' + Math.floor(Math.random() * 1000);
 
       var html = '<div class="alert-message info ' + className + '" style="display: none;">';
-      html += '<img alt="成就圖示" src="' + achi.icon_url + '" width="64" height="64">';
+      html += '<img class="badge" alt="成就圖示" src="' + achi.icon_url + '">';
       html += '<p><strong>' + achi.title + '</strong></p>';
       //html += '<a href="#" class="close">x</a>';
       html += '<p>' + achi.description + '</p>';
@@ -107,6 +107,55 @@ $(document).ready(function(){
   };
 
 
+  var showErrorDialog = function(msg) {
+    var className = 'error' + Math.floor(Math.random() * 1000);
+
+    var html = '<div class="alert-message error ' + className + '" style="display: none;">';
+    html += '<p><strong>出問題了。</strong></p>';
+    html += '<p>' + msg + '</p>';
+    html += '</div>';
+
+    var dlg = $(html);
+    dlg.appendTo($('#notification .placement'));
+    dlg.fadeIn('fast');
+    setTimeout("$('#notification ." + className + "').fadeOut('fast');", 10000);
+  };
+
+  var handleError = function (data) {
+    var className = 'error' + Math.floor(Math.random() * 1000);
+
+    if (data.result == 'not_authorized') {
+      showErrorDialog('你沒有權限。');
+    } else if (data.result == 'duplicated') {
+      var obj = data.objects[0];
+
+      var html = '<div class="alert-message error ' + className + '" style="display: none;">';
+      html += '<p><strong>' + obj.title + '已被推薦。</strong></p>';
+      html += '<p>';
+      html += '<a href="' + obj.relative_url + '">' + obj.title + '</a> 已於';
+      html += '<abbr class="timeago" title="' + obj.pubtime.iso8601 +  '">' + obj.pubtime.localized + '</abbr>被 ';
+      html += '<a href="' + obj.owner.relative_url + '">' + obj.owner.name + '</a> 推薦。';
+      html += '</p>';
+      html += '</div>';
+
+      var dlg = $(html);
+      dlg.appendTo($('#notification .placement'));
+      dlg.fadeIn('fast');
+      setTimeout("$('#notification ." + className + "').fadeOut('fast');", 10000);
+    } else if (data.result == 'not_exist') {
+      showErrorDialog('物品不存在。');
+    } else if (data.result == 'unknown_action') {
+      showErrorDialog('未知的行為。');
+    } else if (data.result == 'missing_parameter') {
+      showErrorDialog('參數不齊全。');
+    } else if (data.result == 'invalid_parameter') {
+      showErrorDialog('參數不正確。');
+    } else if (data.result == 'invalid_state') {
+      showErrorDialog('狀態不正確。');
+    }
+  };
+
+
   // object posted
   var objectPosted = function (data, status) {
     var field = $('#add input[name=title]');
@@ -135,6 +184,7 @@ $(document).ready(function(){
       handleAchievements(data.achievements);
     } else {
       // show error message
+      handleError(data);
     }
 
     field.removeAttr('disabled');

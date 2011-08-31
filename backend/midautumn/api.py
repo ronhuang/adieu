@@ -28,13 +28,14 @@ class ObjectHandler(BaseHandler):
 
         user = self.current_user
         query = db.GqlQuery("SELECT * FROM MidautumnObject WHERE title = :1", title)
+        mo = query.get()
 
         args = None
 
         if not user:
             args = {'result': 'not_authorized'}
-        elif query.count(1) > 0:
-            args = {'result': 'duplicated', 'title': title}
+        elif mo:
+            args = {'result': 'duplicated', 'objects': [mo.to_dict(details=True, current_user=user),]}
         else:
             mo = MidautumnObject(title=title, owner=user)
             mo.put()

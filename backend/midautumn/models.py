@@ -80,6 +80,8 @@ class MidautumnObject(db.Model):
             query = self.comment_set
             result['comment_count'] = query.count()
 
+            result['owner'] = self.owner.profile
+
         if current_user:
             if current_user.id == self.owner.id:
                 result['modifiable'] = True
