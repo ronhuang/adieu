@@ -38,6 +38,7 @@ a.menu img {
 .logo {
   background-image: url(/img/logo.png);
   background-repeat: no-repeat;
+  background-position: center;
   height: 192px;
 }
 .logo:hover {
@@ -47,7 +48,7 @@ a.menu img {
   padding-top: 50px;
 }
 #add input[name=title] {
-  width: 300px;
+  width: 220px;
 }
 #notification {
 }
