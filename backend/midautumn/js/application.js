@@ -164,7 +164,7 @@ $(document).ready(function(){
     if (data.result == 'success') {
       var container = $('#list');
 
-      var latest_title = container.find('.row:first').text()
+      var latest_title = container.find('.row:first .title').text()
 
       // append retrieved objects
       for (var i = data.objects.length - 1; i >= 0; i--) {
