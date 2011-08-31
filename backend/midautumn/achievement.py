@@ -167,6 +167,7 @@ class UserAchievement(db.Model):
         result = {'created': pretty_time(self.created),
                   'relative_url': relative_url,
                   'absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
+                  'owner': self.owner.profile,
                   }
 
         # update result with actual achievement info
