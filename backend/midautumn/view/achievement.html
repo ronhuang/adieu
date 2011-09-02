@@ -21,10 +21,10 @@
           <div class="span10 columns">
             <h2 class="title">{{ title }}</h2>
             <p class="description">{{ description }}</p>
-            <abbr class="timeago" title="{{ created.iso8601 }}">{{ created.localized }}</abbr>
-            由 <a class="owner" href="{{ owner.relative_url }}">{{ owner.name }}</a> 達成。
+            <abbr class="timeago" title="{{ created.iso8601 }}">{{ created.localized }}</abbr>由 <a class="owner" href="{{ owner.relative_url }}">{{ owner.name }}</a> 達成
             <a class="share" href="#" title="分享至 Facebook">分享</a>
-            <fb:comments num_posts="5" width="580"></fb:comments>
+            <fb:like href="{{ absolute_url }}" send="false" width="580" show_faces="true" action="like"></fb:like>
+            <fb:comments href="{{ absolute_url }}" width="580"></fb:comments>
           </div>
         </div>
       </section>

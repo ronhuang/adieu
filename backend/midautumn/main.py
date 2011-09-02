@@ -118,7 +118,7 @@ class ObjectHandler(BaseHandler):
             args = {}
         else:
             pagename = "object.html"
-            args = mo.to_dict()
+            args = mo.to_dict(details=True)
 
         # current user related info
         if self.current_user:

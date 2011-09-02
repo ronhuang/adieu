@@ -2,7 +2,7 @@
 
 {% block title %}{{ title }} - 中秋烤肉{% endblock %}
 {% block description %}{{ title }}在中秋烤肉上的資料。{% endblock %}
-{% block og-title %}{{ title }} - 中秋烤肉{% endblock %}
+{% block og-title %}{{ title }}{% endblock %}
 {% block og-description %}{{ title }}在中秋烤肉上的資料。{% endblock %}
 {% block og-type %}product{% endblock %}
 {% block og-url %}{{ absolute_url }}{% endblock %}
@@ -20,9 +20,10 @@
           </div>
           <div class="span10 columns">
             <h2 class="title">{{ title }}</h2>
-            <abbr class="timeago" title="{{ pubtime.iso8601 }}">{{ pubtime.localized }}</abbr>送出。
+            <abbr class="timeago" title="{{ pubtime.iso8601 }}">{{ pubtime.localized }}</abbr>由 <a class="owner" href="{{ owner.relative_url }}">{{ owner.name }}</a> 推薦
             <a class="share" href="#" title="分享至 Facebook">分享</a>
-            <fb:comments num_posts="5" width="580"></fb:comments>
+            <fb:like href="{{ absolute_url }}" send="false" width="580" show_faces="true" action="like"></fb:like>
+            <fb:comments href="{{ absolute_url }}" width="580"></fb:comments>
           </div>
         </div>
       </section>
