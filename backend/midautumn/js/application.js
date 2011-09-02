@@ -378,7 +378,7 @@ $(document).ready(function(){
         for (var i in data.objects) {
           var obj = data.objects[i];
           var cloned = newObjectRow(obj);
-          cloned.prependTo(container).fadeIn('slow');
+          cloned.appendTo(container).fadeIn('slow');
         }
 
         // update cursor
