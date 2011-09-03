@@ -287,16 +287,8 @@ def get_signed_fb_request(cookies, app_id, app_secret):
     if data:
         response = get_access_token_from_code(data.get('code', ''), app_id, app_secret)
         if response:
-            # See http://www.quora.com/Do-the-OAuth2-access-tokens-in-the-new-Facebook-Graph-API-expire
-            (app_id, session_key, digest) = response.split('|')
-            # non_expiring_token
-            if re.match("^(.*?)\-(.*?)$", session_key):
-                cookie_response["expires"] = "0"
-            else:
-                cookie_response["expires"] = "1"
             cookie_response['fbsr_signed'] = True   # for debugging purposes
             cookie_response['uid'] = data['user_id']
             cookie_response['access_token'] = response
-            cookie_response['session_key'] = session_key
             return cookie_response
     return None
