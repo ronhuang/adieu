@@ -164,6 +164,28 @@ class ChannelHandler(BaseHandler):
         self.response.out.write(template.render(path, {}))
 
 
+class ObjectsHandler(BaseHandler):
+
+    def get(self):
+        args = {}
+        pagename = 'objects.html'
+
+        query = MidautumnObject.all()
+        query.order('pubtime')
+        objects = []
+        for obj in query:
+            objects.append(obj.to_dict(details=True))
+        args['objects'] = objects
+
+        # current user related info
+        if self.current_user:
+            args['profile'] = self.current_user.profile
+
+        dirname = os.path.dirname(__file__)
+        path = os.path.join(dirname, 'view', pagename)
+        self.response.out.write(template.render(path, args))
+
+
 def main():
     actions = [
         ('/', HomeHandler),
@@ -171,6 +193,7 @@ def main():
         ('/object/([0-9]+)$', ObjectHandler),
         ('/achievement/([0-9]+)$', AchievementHandler),
         ('/channel', ChannelHandler),
+        ('/objects$', ObjectsHandler),
         ]
     application = webapp.WSGIApplication(actions, debug=True)
     util.run_wsgi_app(application)

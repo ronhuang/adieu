@@ -297,6 +297,9 @@ $(document).ready(function(){
     });
   });
 
+  // highlight
+  $('body.home .primary-nav li.home, body.objects .primary-nav li.objects').addClass('active');
+
 
   // prevent invalid input...
   $('#add input[name=title]').keyup(function () {
@@ -509,5 +512,9 @@ $(document).ready(function(){
       s.src = 'http://erkie.github.com/asteroids.min.js';
     }
   });
+
+
+  // sort table in objects page
+  $('.objects #objects table').tablesorter({ sortList: [[0,0]] });
 
 });

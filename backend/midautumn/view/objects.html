@@ -1,0 +1,48 @@
+{% extends "base-menu.html" %}
+
+{% block title %}所有物品 - 中秋烤肉{% endblock %}
+{% block description %}顯示所有在中秋烤肉上的物品。{% endblock %}
+{% block og-title %}所有物品{% endblock %}
+{% block og-description %}顯示所有在中秋烤肉上的物品。{% endblock %}
+{% block og-type %}article{% endblock %}
+{% block og-url %}http://midautumn.ronhuang.org/objects{% endblock %}
+
+{% block body-class %}objects{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+      <section id="objects">
+        <div class="row">
+          <div class="page-header">
+            <h1>所有物品</h1>
+          </div>
+        </div>
+        <table class="zebra-striped">
+          <thead>
+            <tr>
+              <th class="header">#</th>
+              <th class="yellow header">名稱</th>
+              <th class="blue header">推薦者</th>
+              <th class="green header">讚</th>
+              <th class="orange header">留言</th>
+              <th class="red header">推薦時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in objects %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td><a href="{{ obj.relative_url }}">{{ obj.title }}</a></td>
+              <td><a href="{{ obj.owner.relative_url }}">{{ obj.owner.name }}</a></td>
+              <td>{{ obj.like_count }}</td>
+              <td>{{ obj.comment_count }}</td>
+              <td>{{ obj.pubtime.localized }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+{% endblock %}
