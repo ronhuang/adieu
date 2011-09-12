@@ -1,0 +1,46 @@
+{% extends "base-menu.html" %}
+
+{% block title %}成就系統 - 中秋烤肉{% endblock %}
+{% block description %}顯示所有已被解開的成就。{% endblock %}
+{% block og-title %}成就系統{% endblock %}
+{% block og-description %}顯示所有已被解開的成就。{% endblock %}
+{% block og-type %}article{% endblock %}
+{% block og-url %}http://midautumn.ronhuang.org/achievements{% endblock %}
+
+{% block body-class %}achievements{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+      <section id="achievements">
+        <div class="row">
+          <div class="page-header">
+            <h1>成就系統<small>所有已被解開的成就</small></h1>
+          </div>
+        </div>
+        <table class="zebra-striped">
+          <thead>
+            <tr>
+              <th class="header">#</th>
+              <th class="yellow header">名稱</th>
+              <th class="blue header">已獲得數</th>
+              <th class="green header">首位獲得者</th>
+              <th class="orange header">首次獲得時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for achi in achievements %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td><a href="{{ achi.url }}">{{ achi.title }}</a></td>
+              <td>{{ achi.count }}</td>
+              <td><a href="{{ achi.owner.relative_url }}">{{ achi.owner.name }}</a></td>
+              <td>{{ achi.date.localized }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+{% endblock %}

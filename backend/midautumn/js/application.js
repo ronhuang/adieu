@@ -298,7 +298,7 @@ $(document).ready(function(){
   });
 
   // highlight
-  $('body.home .primary-nav li.home, body.objects .primary-nav li.objects').addClass('active');
+  $('body.home .primary-nav li.home, body.objects .primary-nav li.objects, body.achievements .primary-nav li.achievements').addClass('active');
 
 
   // prevent invalid input...
@@ -516,5 +516,8 @@ $(document).ready(function(){
 
   // sort table in objects page
   $('.objects #objects table').tablesorter({ sortList: [[0,0]] });
+
+  // sort table in achievements page
+  $('.achievements #achievements table').tablesorter({ sortList: [[0,0]] });
 
 });

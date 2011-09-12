@@ -156,6 +156,7 @@ class UserAchievement(db.Model):
                     'description': description,
                     'icon_url': relative_url,
                     'icon_absolute_url': 'http://midautumn.ronhuang.org' + relative_url,
+                    'aid': aid,
                     }
         else:
             return {}

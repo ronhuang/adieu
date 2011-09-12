@@ -186,6 +186,41 @@ class ObjectsHandler(BaseHandler):
         self.response.out.write(template.render(path, args))
 
 
+class AchievementsHandler(BaseHandler):
+
+    def get(self):
+        args = {}
+        pagename = 'achievements.html'
+
+        query = UserAchievement.all()
+        query.order('created')
+
+        ids = []
+        infos = {}
+        for achi in query:
+            achi = achi.to_dict()
+            aid = achi['aid']
+            if aid not in ids:
+                ids.append(aid)
+            info = infos.setdefault(aid, {'title': achi['title'],
+                                          'count': 0,
+                                          'date': achi['created'],
+                                          'owner': achi['owner'],
+                                          'url': achi['relative_url'],
+                                          })
+            info['count'] += 1
+
+        args['achievements'] = [infos[aid] for aid in ids]
+
+        # current user related info
+        if self.current_user:
+            args['profile'] = self.current_user.profile
+
+        dirname = os.path.dirname(__file__)
+        path = os.path.join(dirname, 'view', pagename)
+        self.response.out.write(template.render(path, args))
+
+
 def main():
     actions = [
         ('/', HomeHandler),
@@ -194,6 +229,7 @@ def main():
         ('/achievement/([0-9]+)$', AchievementHandler),
         ('/channel', ChannelHandler),
         ('/objects$', ObjectsHandler),
+        ('/achievements$', AchievementsHandler),
         ]
     application = webapp.WSGIApplication(actions, debug=True)
     util.run_wsgi_app(application)
