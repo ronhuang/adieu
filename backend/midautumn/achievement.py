@@ -16,7 +16,7 @@ from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext import db
 from django.utils import simplejson as json
 from midautumn.models import FacebookUser
-from midautumn.utils import pretty_time
+from midautumn.utils import pretty_time, localdate
 
 
 ITEM_OFFSET = 1000
@@ -346,6 +346,30 @@ def check_continuous_visit(user):
     key = ua.put()
 
     title, description, icon = CONTINUOUS_VISIT_VALUE[count]
+    return [{'key': key.id(),
+             'title': title,
+             'description': description,
+             'icon_url': '/img/' + icon,
+             }]
+
+
+def check_visit_date(user):
+    now = localdate()
+
+    if now not in TIME_VALUE:
+        return []
+
+    achievement_id = TIME_OFFSET + TIME_KEY.index(now)
+
+    # check if already received achievement
+    query = user.achievement_set.filter('achievement_id =', achievement_id)
+    if query.count() > 0:
+        return []
+
+    ua = UserAchievement(owner=user, achievement_id=achievement_id)
+    key = ua.put()
+
+    title, description, icon = TIME_VALUE[now]
     return [{'key': key.id(),
              'title': title,
              'description': description,

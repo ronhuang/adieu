@@ -255,7 +255,9 @@ class VisitHandler(BaseHandler):
         else:
             self._handle_visit(user)
 
-            achievements = achievement.check_continuous_visit(user)
+            achievements = []
+            achievements.extend(achievement.check_continuous_visit(user))
+            achievements.extend(achievement.check_visit_date(user))
             args = {'result': 'success',
                     'achievements': achievements
                     }

@@ -6,7 +6,7 @@
 
 
 import time
-from datetime import timedelta, tzinfo
+from datetime import timedelta, tzinfo, datetime
 
 
 ZERO = timedelta(0)
@@ -59,3 +59,7 @@ def pretty_time(dt, tz=tpe):
             'localized': localtime.strftime(fmt),
             'timestamp': int(time.mktime(utctime.timetuple())),
             }
+
+def localdate(tz=tpe):
+    now = datetime.now(tz)
+    return now.date()
